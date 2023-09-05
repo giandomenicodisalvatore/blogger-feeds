@@ -1,0 +1,50 @@
+{
+  "name": "blogger-feeds",
+  "version": "1.0.0",
+  "description": "Blogspot feeds client and utilities",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:cov": "vitest run --coverage"
+  },
+  "keywords": [
+    "Blogspot",
+    "feeds",
+    "blogspot feeds",
+    "blogspot client",
+    "google blogger",
+    "blogger client"
+  ],
+  "author": "Giandomenico Di Salvatore",
+  "license": "MIT",
+  "volta": {
+    "node": "20.5.1",
+    "pnpm": "8.7.1"
+  },
+  "engines": {
+    "node": "20.5.1",
+    "pnpm": "8.7.1"
+  },
+  "devDependencies": {
+    "@ngneat/falso": "^7.1.0",
+    "@types/node": "^20.5.9",
+    "@vitest/coverage-v8": "^0.34.3",
+    "@vitest/ui": "^0.34.3",
+    "prettier": "^3.0.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-dts": "^3.5.3",
+    "vitest": "^0.34.3",
+    "weaken-it": "^1.1.1"
+  },
+  "peerDependencies": {
+    "tslib": "^2.6.2",
+    "weaken-it": "^1.1.1"
+  }
+}
