@@ -22,6 +22,8 @@ export default defineConfig({
 		outDir: './dist',
 		emptyOutDir: true,
 
+		copyPublicDir: false,
+
 		lib: {
 			entry: resolve('./src/main.ts'),
 			formats: ['es'],
