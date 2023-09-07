@@ -17,6 +17,8 @@ import {
 	getLabelsParam,
 	setLabelsParam,
 	clearLabels,
+	getStartIndexParam,
+	setStartIndexParam,
 } from '@lib'
 
 // [x] extend native js URL behaviour with blogspot requirements
@@ -49,7 +51,7 @@ export class BloggerFeedsUrl extends URL {
 	}
 
 	get ['max-results']() {
-		return Number(getMaxResultsParam(this))
+		return getMaxResultsParam(this)
 	}
 	set ['max-results'](num: number) {
 		setMaxResultsParam(this, num)
@@ -58,6 +60,18 @@ export class BloggerFeedsUrl extends URL {
 		return arguments.length
 			? ((this['max-results'] = num ?? 150), this)
 			: this['max-results']
+	}
+
+	get ['start-index']() {
+		return getStartIndexParam(this)
+	}
+	set ['start-index'](num: number) {
+		setStartIndexParam(this, num)
+	}
+	startIndex(num?: number) {
+		return arguments.length
+			? ((this['start-index'] = num ?? 1), this)
+			: this['start-index']
 	}
 
 	get ['orderby']() {
