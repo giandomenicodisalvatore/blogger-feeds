@@ -1,26 +1,25 @@
 import {
-	type BloggerFeedsUrl,
-	FEEDS_PARAMS,
+	type BFUrl,
 	FEEDS_PATH,
+	FEEDS_PARAMS,
 	getPostId,
 	paginatedPosts,
 	singlePost,
 } from '@lib'
+import { wSure } from 'weaken-it'
 
-export function urlSetup(url: BloggerFeedsUrl) {
-	if (url.pathname.search(FEEDS_PATH) === -1)
-		// enforce required path once
-		url.pathname += FEEDS_PATH.substring(
-			Number(url.pathname.endsWith('/')), // dedupe
-		)
+export const urlSetup = (url: BFUrl) => {
+	// default path segment
+	if (!url.pathname.includes(FEEDS_PATH))
+		url.pathname += FEEDS_PATH.substring(Number(url.pathname.endsWith('/')))
 
+	// default required params
 	FEEDS_PARAMS.forEach((v, k) => {
-		if (!url.searchParams.has(k))
-			// enforce required params once
-			url.searchParams.set(k, v)
+		if (url.searchParams.get(k) !== v) url.searchParams.set(k, v)
 	})
 
-	return (url.post ??= getPostId(url.pathname))
+	// switch flow according to post
+	wSure(url, 'post', getPostId(url.pathname))
 		? singlePost(url)
 		: paginatedPosts(url)
 }

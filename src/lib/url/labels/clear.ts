@@ -1,6 +1,5 @@
-import { type BloggerFeedsUrl } from '@lib'
-import { wit } from 'weaken-it'
+import { type BFUrl } from '@lib'
+import { wSure } from 'weaken-it'
 
-export function clearLabels(url: BloggerFeedsUrl) {
-	wit(url, 'labels').clear()
-}
+export const clearLabels = (url: BFUrl) =>
+	wSure(url, 'labels', new Set()).clear()

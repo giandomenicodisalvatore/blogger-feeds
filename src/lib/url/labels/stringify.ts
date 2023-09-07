@@ -1,9 +1,7 @@
-import { type BloggerFeedsUrl, getLabelsParam } from '@lib'
+import { type BFUrl, getLabelsParam } from '@lib'
 import { wMemo } from 'weaken-it'
 
-export const stringifyLabels = wMemo(_stringifyLabels)
-
-function _stringifyLabels(url: BloggerFeedsUrl) {
+export const stringifyLabelsFn = (url: BFUrl) => {
 	let labels = getLabelsParam(url),
 		stringed = ''
 
@@ -12,3 +10,5 @@ function _stringifyLabels(url: BloggerFeedsUrl) {
 
 	return stringed
 }
+
+export const stringifyLabels = wMemo(stringifyLabelsFn)

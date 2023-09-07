@@ -25,29 +25,30 @@ import {
 // [x] baseUrl must be valid, otherwise native error
 // [x] allows usage as object, via get / set / chainable methods
 // [x] avoid Proxy (speed) and Object.defineProperty (readability)
-// [x] allows initialization via plain object
+
+export { BloggerFeedsUrl as BFUrl }
 
 export class BloggerFeedsUrl extends URL {
-	constructor() {
-		// @ts-ignore
-		super(...arguments)
+	constructor(url: BloggerFeedsUrl | UrlLike, base?: UrlLike) {
+		// string casting for normalization and compatibility
+		super(url + '', base)
 		urlSetup(this)
 	}
 
 	toString() {
-		return (
-			urlSetup(this), decodeURIComponent(URL.prototype.toString.apply(this))
-		)
+		urlSetup(this)
+		return decodeURIComponent(URL.prototype.toString.apply(this))
 	}
 
-	get ['post']() {
+	get ['post'](): string | null {
 		return getPostParam(this)
 	}
-	set ['post'](post) {
+	set ['post'](post: UrlLike) {
 		setPostParam(this, post)
 	}
 	postId(post?: UrlLike) {
-		return arguments.length ? ((this.post = post), this) : this.post
+		if (!arguments.length) return this.post
+		return post && (this.post = post), this
 	}
 
 	get ['max-results']() {
@@ -57,9 +58,9 @@ export class BloggerFeedsUrl extends URL {
 		setMaxResultsParam(this, num)
 	}
 	maxResults(num?: number) {
-		return arguments.length
-			? ((this['max-results'] = num ?? 150), this)
-			: this['max-results']
+		if (!arguments.length) return this['max-results']
+		this['max-results'] = num ?? 150
+		return this
 	}
 
 	get ['start-index']() {
@@ -69,9 +70,9 @@ export class BloggerFeedsUrl extends URL {
 		setStartIndexParam(this, num)
 	}
 	startIndex(num?: number) {
-		return arguments.length
-			? ((this['start-index'] = num ?? 1), this)
-			: this['start-index']
+		if (!arguments.length) return this['start-index']
+		this['start-index'] = num ?? 1
+		return this
 	}
 
 	get ['orderby']() {
@@ -81,9 +82,9 @@ export class BloggerFeedsUrl extends URL {
 		setOrderByParam(this, str)
 	}
 	orderBy(str?: string) {
-		return arguments.length
-			? ((this['orderby'] = str ?? ''), this)
-			: this['orderby']
+		if (!arguments.length) return this['orderby']
+		this['orderby'] = str ?? 'published'
+		return this
 	}
 
 	get ['published-max']() {
@@ -111,7 +112,9 @@ export class BloggerFeedsUrl extends URL {
 		setDateParams(this, 'updated-min', date)
 	}
 	dateParams(param: DateParamLike, date?: DateLike) {
-		return arguments.length ? ((this[param] = date ?? ''), this) : this[param]
+		if (arguments.length === 1) return this[param]
+		if (arguments.length === 2) this[param] = date ?? ''
+		return this
 	}
 
 	get ['searched']() {
@@ -121,9 +124,9 @@ export class BloggerFeedsUrl extends URL {
 		setSearchedParam(this, str)
 	}
 	withSearch(str?: string) {
-		return arguments.length
-			? ((this['searched'] = str ?? ''), this)
-			: this['searched']
+		if (!arguments.length) return this['searched']
+		this['searched'] = str ?? ''
+		return this
 	}
 
 	get ['labels'](): LabelLike[] {
@@ -132,12 +135,13 @@ export class BloggerFeedsUrl extends URL {
 	set ['labels'](labels: LabelLike) {
 		setLabelsParam(this, labels)
 	}
-	withLabels(labels: LabelLike) {
-		return arguments.length // @ts-ignore
-			? ((this['labels'] = labels ?? ''), this)
-			: this['labels']
+	withLabels(...labels: LabelLike[]) {
+		if (!arguments.length) return this['labels']
+		this['labels'] = labels
+		return this
 	}
 	clearLabels() {
-		return clearLabels(this), this
+		clearLabels(this)
+		return this
 	}
 }

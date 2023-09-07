@@ -1,6 +1,6 @@
-import { ALLOWED_PARAMS, stringifyLabels, type BloggerFeedsUrl } from '@lib'
+import { ALLOWED_PARAMS, stringifyLabels, type BFUrl, FEEDS_PARAMS } from '@lib'
 
-export function paginatedPosts(url: BloggerFeedsUrl) {
+export const paginatedPosts = (url: BFUrl) => {
 	// enforce required params
 	url['orderby'] ??= 'published'
 	url['max-results'] ??= 150
@@ -8,9 +8,10 @@ export function paginatedPosts(url: BloggerFeedsUrl) {
 	// merge search and lables
 	url['searched'] = stringifyLabels(url) + ' ' + url['searched']
 
-	// cleanup useless / unallowed
-	for (const [k, v] of url.searchParams.entries())
+	// cleanup empty or unallowed
+	url.searchParams.forEach((v, k) => {
 		if (!ALLOWED_PARAMS.has(k) || !v) url.searchParams.delete(k)
+	})
 
 	// sort for cache matching
 	url.searchParams.sort()

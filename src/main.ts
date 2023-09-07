@@ -1,1 +1,1 @@
-export { BloggerFeedsUrl } from '@lib'
+export { BloggerFeedsUrl, BFUrl } from '@lib'

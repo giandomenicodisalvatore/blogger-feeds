@@ -2,10 +2,8 @@ import { wMemo } from 'weaken-it'
 
 export type LabelLike = string | string[]
 
-export const normalizeLabels = wMemo(_normalizeLabels)
-
-function _normalizeLabels(label: LabelLike): string {
-	let normalized = [],
+export const normalizeLabelsFn = (label: LabelLike): string => {
+	let normalized: string[] = [],
 		lab
 
 	if (typeof label === 'string' && (label = label.trim()))
@@ -13,7 +11,9 @@ function _normalizeLabels(label: LabelLike): string {
 
 	if (Array.isArray(label))
 		while (label.length)
-			if ((lab = _normalizeLabels(label.shift() ?? ''))) normalized.push(lab)
+			(lab = normalizeLabelsFn(label.shift() ?? '')) && normalized.push(lab)
 
-	return normalized.sort().join(',')
+	return normalized.sort() + ''
 }
+
+export const normalizeLabels = wMemo(normalizeLabelsFn)

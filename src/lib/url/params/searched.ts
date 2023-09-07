@@ -1,9 +1,6 @@
-import { type BloggerFeedsUrl } from '@lib'
+import { type BFUrl } from '@lib'
 
-export function getSearchedParam(url: BloggerFeedsUrl) {
-	return url.searchParams.get('q') ?? ''
-}
+export const getSearchedParam = (url: BFUrl) => url.searchParams.get('q') ?? ''
 
-export function setSearchedParam(url: BloggerFeedsUrl, str: string) {
-	if ((str = str.trim())) url.searchParams.set('q', str)
-}
+export const setSearchedParam = (url: BFUrl, str: string) =>
+	void (str = str.trim()) && url.searchParams.set('q', str)

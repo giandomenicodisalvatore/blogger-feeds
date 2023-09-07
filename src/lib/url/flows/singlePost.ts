@@ -1,12 +1,15 @@
-import { POSTID_RGX, FEEDS_PARAMS, type BloggerFeedsUrl } from '@lib'
+import { POSTID_RGX, type BFUrl, FEEDS_PARAMS } from '@lib'
 import { wit } from 'weaken-it'
 
 export type UrlLike = string | URL
 
-export function singlePost(url: BloggerFeedsUrl) {
-	url.pathname += `${wit(url, 'post') ?? ''}?${FEEDS_PARAMS}`
+export const singlePost = (url: BFUrl) => {
+	// postId exists, can be safely added
+	url.pathname += `${wit(url, 'post')}`
+
+	// cleanup unrequired params
+	url.search = FEEDS_PARAMS + ''
 }
 
-export function getPostId(str: UrlLike) {
-	return (str + '').match(POSTID_RGX)?.at(0) ?? null
-}
+export const getPostId = (str: UrlLike) =>
+	(str + '').match(POSTID_RGX)?.at(0) ?? null

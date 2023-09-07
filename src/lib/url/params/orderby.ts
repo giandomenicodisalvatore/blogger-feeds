@@ -1,9 +1,7 @@
-import { ALLOWED_ORDERBY, type BloggerFeedsUrl } from '@lib'
+import { ALLOWED_ORDERBY, type BFUrl } from '@lib'
 
-export function getOrderByParam(url: BloggerFeedsUrl) {
-	return url.searchParams.get('orderby') ?? ''
-}
+export const getOrderByParam = (url: BFUrl) =>
+	url.searchParams.get('orderby') ?? ''
 
-export function setOrderByParam(url: BloggerFeedsUrl, str: string) {
-	url.searchParams.set('orderby', ALLOWED_ORDERBY.has(str) ? str : 'published')
-}
+export const setOrderByParam = (url: BFUrl, str: string) =>
+	void ALLOWED_ORDERBY.has(str) && url.searchParams.set('orderby', str)

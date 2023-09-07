@@ -1,5 +1,8 @@
-export function numClamp(num: number, range: number[]) {
-	const min = Math.min(...range),
-		max = Math.max(...range)
-	return (num <= min && min) || (num >= max && max) || num
+export const numClamp = (num: number, ...range: number[]) => {
+	let min, max
+	return (
+		(num <= (min = Math.min(...range)) && min) ||
+		(num >= (max = Math.max(...range)) && max) ||
+		num
+	)
 }

@@ -5,8 +5,8 @@ export const FEEDS_PARAMS = new URLSearchParams({
 	dynamicviews: '1',
 	alt: 'json',
 	v: '2',
-})
-FEEDS_PARAMS.sort() // sorted once
+}) // sorted once
+FEEDS_PARAMS.sort()
 
 export const POSTID_RGX = /\d{7,}/
 

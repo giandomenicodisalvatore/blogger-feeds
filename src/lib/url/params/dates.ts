@@ -1,9 +1,4 @@
-import {
-	DATE_PARAMS,
-	isoDateStr,
-	type DateLike,
-	type BloggerFeedsUrl,
-} from '@lib'
+import { DATE_PARAMS, isoDateStr, type DateLike, type BFUrl } from '@lib'
 
 export type DateParamLike =
 	| 'published-max'
@@ -11,15 +6,10 @@ export type DateParamLike =
 	| 'updated-max'
 	| 'updated-min'
 
-export function getDateParams(url: BloggerFeedsUrl, par: DateParamLike) {
-	return (DATE_PARAMS.has(par) && url.searchParams.get(par)) || ''
-}
+export const getDateParams = (url: BFUrl, par: DateParamLike) =>
+	(DATE_PARAMS.has(par) && url.searchParams.get(par)) || ''
 
-export function setDateParams(
-	url: BloggerFeedsUrl,
-	par: DateParamLike,
-	date: DateLike,
-) {
-	if (DATE_PARAMS.has(par) && (date = isoDateStr(date) ?? ''))
-		url.searchParams.set(par, date)
-}
+export const setDateParams = (url: BFUrl, par: DateParamLike, date: DateLike) =>
+	void DATE_PARAMS.has(par) &&
+	(date = isoDateStr(date) ?? '') &&
+	url.searchParams.set(par, date)
