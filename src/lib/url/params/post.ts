@@ -3,5 +3,6 @@ import { wit } from 'weaken-it'
 
 export const getPostParam = (url: BFUrl) => wit(url, 'post') || null
 
-export const setPostParam = (url: BFUrl, post: UrlLike) =>
-	void ((post = getPostId(post) ?? '') && wit(url, 'post', post))
+export const setPostParam = (url: BFUrl, post: UrlLike) => {
+	if ((post = getPostId(post) ?? '')) wit(url, 'post', post)
+}

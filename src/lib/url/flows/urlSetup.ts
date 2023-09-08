@@ -22,4 +22,6 @@ export const urlSetup = (url: BFUrl) => {
 	wSure(url, 'post', getPostId(url.pathname))
 		? singlePost(url)
 		: paginatedPosts(url)
+
+	return url
 }

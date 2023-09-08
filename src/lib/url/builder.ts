@@ -19,74 +19,83 @@ import {
 	clearLabels,
 	getStartIndexParam,
 	setStartIndexParam,
+	BloggerOrderBy,
 } from '@lib'
-
-// [x] extend native js URL behaviour with blogspot requirements
-// [x] baseUrl must be valid, otherwise native error
-// [x] allows usage as object, via get / set / chainable methods
-// [x] avoid Proxy (speed) and Object.defineProperty (readability)
 
 export { BloggerFeedsUrl as BFUrl }
 
 export class BloggerFeedsUrl extends URL {
-	constructor(url: BloggerFeedsUrl | UrlLike, base?: UrlLike) {
-		// string casting for normalization and compatibility
+	constructor(url: BloggerFeedsUrl | UrlLike, base?: UrlLike)
+	constructor(url: any, base: any) {
+		// normalization and compatibility
 		super(url + '', base)
-		urlSetup(this)
+		return urlSetup(this)
 	}
 
 	toString() {
-		urlSetup(this)
-		return decodeURIComponent(URL.prototype.toString.apply(this))
+		const string = URL.prototype.toString.apply(urlSetup(this))
+		return decodeURIComponent(string)
+		// readability & consistency
 	}
 
+	postId(post: UrlLike): this
+	postId(): string
+	postId(post?: any) {
+		if (!arguments.length) return this.post
+		return post && (this.post = post), this
+	}
 	get ['post'](): string | null {
 		return getPostParam(this)
 	}
 	set ['post'](post: UrlLike) {
 		setPostParam(this, post)
 	}
-	postId(post?: UrlLike) {
-		if (!arguments.length) return this.post
-		return post && (this.post = post), this
-	}
 
-	get ['max-results']() {
+	maxResults(num: number): this
+	maxResults(): number | null
+	maxResults(num?: any) {
+		if (!arguments.length) return this['max-results']
+		return (this['max-results'] = num ?? 150), this
+	}
+	get ['max-results'](): number | null {
 		return getMaxResultsParam(this)
 	}
 	set ['max-results'](num: number) {
 		setMaxResultsParam(this, num)
 	}
-	maxResults(num?: number) {
-		if (!arguments.length) return this['max-results']
-		this['max-results'] = num ?? 150
-		return this
-	}
 
-	get ['start-index']() {
+	startIndex(num: number): this
+	startIndex(): number | null
+	startIndex(num?: any) {
+		if (!arguments.length) return this['start-index']
+		return (this['start-index'] = num), this
+	}
+	get ['start-index'](): number | null {
 		return getStartIndexParam(this)
 	}
 	set ['start-index'](num: number) {
 		setStartIndexParam(this, num)
 	}
-	startIndex(num?: number) {
-		if (!arguments.length) return this['start-index']
-		this['start-index'] = num ?? 1
-		return this
-	}
 
-	get ['orderby']() {
+	orderBy(str: string): this
+	orderBy(): BloggerOrderBy | string
+	orderBy(str?: any) {
+		if (!arguments.length) return this['orderby']
+		return (this['orderby'] = str), this
+	}
+	get ['orderby'](): BloggerOrderBy | string {
 		return getOrderByParam(this)
 	}
-	set ['orderby'](str: string) {
+	set ['orderby'](str: BloggerOrderBy) {
 		setOrderByParam(this, str)
 	}
-	orderBy(str?: string) {
-		if (!arguments.length) return this['orderby']
-		this['orderby'] = str ?? 'published'
-		return this
-	}
 
+	dateParams(param: DateParamLike, date: DateLike): this
+	dateParams(param: DateParamLike): string
+	dateParams(param: DateParamLike, date?: any) {
+		if (arguments.length === 1) return this[param]
+		return date && (this[param] = date), this
+	}
 	get ['published-max']() {
 		return getDateParams(this, 'published-max')
 	}
@@ -111,37 +120,34 @@ export class BloggerFeedsUrl extends URL {
 	set ['updated-min'](date: DateLike) {
 		setDateParams(this, 'updated-min', date)
 	}
-	dateParams(param: DateParamLike, date?: DateLike) {
-		if (arguments.length === 1) return this[param]
-		if (arguments.length === 2) this[param] = date ?? ''
-		return this
-	}
 
+	withSearch(str: string): this
+	withSearch(): string
+	withSearch(str?: any) {
+		if (!arguments.length) return this['searched']
+		return (this['searched'] = str ?? ''), this
+	}
 	get ['searched']() {
 		return getSearchedParam(this)
 	}
 	set ['searched'](str: string) {
 		setSearchedParam(this, str)
 	}
-	withSearch(str?: string) {
-		if (!arguments.length) return this['searched']
-		this['searched'] = str ?? ''
-		return this
-	}
 
+	withLabels(...labels: LabelLike[]): this
+	withLabels(): LabelLike[]
+	withLabels(...labels: any) {
+		if (!arguments.length) return this['labels']
+		return (this['labels'] = labels), this
+	}
 	get ['labels'](): LabelLike[] {
 		return getLabelsParam(this)
 	}
 	set ['labels'](labels: LabelLike) {
 		setLabelsParam(this, labels)
 	}
-	withLabels(...labels: LabelLike[]) {
-		if (!arguments.length) return this['labels']
-		this['labels'] = labels
-		return this
-	}
-	clearLabels() {
-		clearLabels(this)
-		return this
+
+	clearLabels(): this {
+		return clearLabels(this), this
 	}
 }

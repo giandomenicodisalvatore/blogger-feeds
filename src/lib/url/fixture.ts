@@ -11,6 +11,7 @@ FEEDS_PARAMS.sort()
 export const POSTID_RGX = /\d{7,}/
 
 export const ALLOWED_ORDERBY = new Set(['published', 'updated'])
+export type BloggerOrderBy = 'published' | 'updated'
 
 export const ALLOWED_MAX_RESULTS = new Set([1, 150])
 
