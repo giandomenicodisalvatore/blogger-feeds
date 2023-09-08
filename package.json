@@ -5,6 +5,9 @@
   "files": [
     "dist"
   ],
+  "type": "module",
+  "module": "./dist/blogger-feeds.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "vite build",
     "dev": "vite",
@@ -23,25 +26,24 @@
   "author": "Giandomenico Di Salvatore",
   "license": "MIT",
   "volta": {
-    "node": "20.5.1",
-    "pnpm": "8.7.1"
+    "node": "20.6.0",
+    "pnpm": "8.7.4"
   },
   "engines": {
-    "node": "20.5.1",
-    "pnpm": "8.7.1"
+    "node": "20.6.0",
+    "pnpm": "8.7.4"
   },
   "devDependencies": {
-    "@ngneat/falso": "^7.1.0",
     "@types/node": "^20.5.9",
-    "@vitest/coverage-v8": "^0.34.3",
-    "@vitest/ui": "^0.34.3",
+    "@vitest/coverage-v8": "^0.34.4",
+    "@vitest/ui": "^0.34.4",
     "prettier": "^3.0.3",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vite-plugin-dts": "^3.5.3",
-    "vitest": "^0.34.3",
-    "weaken-it": "^1.1.1"
+    "vitest": "^0.34.4",
+    "weaken-it": "^1.1.2"
   },
   "peerDependencies": {
     "tslib": "^2.6.2",

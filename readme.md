@@ -93,6 +93,7 @@ console.log(PaginatedPosts + '')
 
 [ ] Other utilities and wrappers
 [ ] Minimal Tests
+[ ] Write jsdocs
 [ ] Documentation
 
 ## Disclaimer

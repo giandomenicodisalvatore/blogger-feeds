@@ -5,3 +5,6 @@ dist
 
 # TODO: vitepress
 docs
+
+# dev only
+*.html

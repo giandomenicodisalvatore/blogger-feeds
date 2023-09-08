@@ -1,5 +1,7 @@
 {
   "conventionalCommits.scopes": [
-    "lib"
+    "lib",
+    "build",
+    "utils"
   ]
 }
