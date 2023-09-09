@@ -13,7 +13,7 @@ describe('numClamp', () => {
 			for (let i = 0; i < range.length; i++)
 				expect(numClamp(range[i], ...range)).toBe(range[i])
 
-			// out of range
+			// clamped
 			expect(numClamp(min - 1, ...range)).toBe(min)
 			expect(numClamp(max + 1, ...range)).toBe(max)
 		})
