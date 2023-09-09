@@ -15,7 +15,6 @@ export default defineConfig({
 	plugins: [
 		dts({
 			entryRoot: './src',
-			insertTypesEntry: true,
 		}),
 	],
 
@@ -25,8 +24,9 @@ export default defineConfig({
 		},
 
 		lib: {
+			fileName: (fmt, name) => [name, fmt, 'js'].join('.'),
 			entry: resolve('./src/main.ts'),
-			formats: ['es'],
+			name: 'BloggerFeeds',
 		},
 
 		copyPublicDir: false,
@@ -44,7 +44,7 @@ export default defineConfig({
 		},
 
 		coverage: {
-			reporter: ['html', 'json', 'text'],
+			reporter: ['html', 'html-spa', 'json', 'text'],
 			reportsDirectory: './www/coverage',
 			enabled: true, // only prod
 			provider: 'v8',

@@ -2,6 +2,7 @@
   "conventionalCommits.scopes": [
     "lib",
     "build",
-    "utils"
+    "utils",
+    "types"
   ]
 }
