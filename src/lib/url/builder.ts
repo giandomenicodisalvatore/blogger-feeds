@@ -33,9 +33,8 @@ export class BloggerFeedsUrl extends URL {
 	}
 
 	toString() {
-		const string = URL.prototype.toString.apply(urlSetup(this))
-		return decodeURIComponent(string)
 		// readability & consistency
+		return decodeURIComponent(URL.prototype.toString.apply(urlSetup(this)))
 	}
 
 	postId(post: UrlLike): this
@@ -44,7 +43,7 @@ export class BloggerFeedsUrl extends URL {
 		if (!arguments.length) return this.post
 		return post && (this.post = post), this
 	}
-	get ['post'](): string | null {
+	get ['post']() {
 		return getPostParam(this)
 	}
 	set ['post'](post: UrlLike) {
@@ -55,7 +54,7 @@ export class BloggerFeedsUrl extends URL {
 	maxResults(): number | null
 	maxResults(num?: any) {
 		if (!arguments.length) return this['max-results']
-		return (this['max-results'] = num ?? 150), this
+		return (this['max-results'] = num), this
 	}
 	get ['max-results'](): number | null {
 		return getMaxResultsParam(this)
@@ -77,13 +76,13 @@ export class BloggerFeedsUrl extends URL {
 		setStartIndexParam(this, num)
 	}
 
-	orderBy(str: string): this
-	orderBy(): BloggerOrderBy | string
+	orderBy(str: BloggerOrderBy): this
+	orderBy(): BloggerOrderBy | null
 	orderBy(str?: any) {
 		if (!arguments.length) return this['orderby']
 		return (this['orderby'] = str), this
 	}
-	get ['orderby'](): BloggerOrderBy | string {
+	get ['orderby'](): BloggerOrderBy | null {
 		return getOrderByParam(this)
 	}
 	set ['orderby'](str: BloggerOrderBy) {
@@ -125,7 +124,7 @@ export class BloggerFeedsUrl extends URL {
 	withSearch(): string
 	withSearch(str?: any) {
 		if (!arguments.length) return this['searched']
-		return (this['searched'] = str ?? ''), this
+		return (this['searched'] = str), this
 	}
 	get ['searched']() {
 		return getSearchedParam(this)

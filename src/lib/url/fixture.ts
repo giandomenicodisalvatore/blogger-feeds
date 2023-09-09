@@ -1,3 +1,5 @@
+import { DateParamLike } from '@lib'
+
 export const FEEDS_PATH = '/feeds/posts/default/'
 
 export const FEEDS_PARAMS = new URLSearchParams({
@@ -15,7 +17,7 @@ export type BloggerOrderBy = 'published' | 'updated'
 
 export const ALLOWED_MAX_RESULTS = new Set([1, 150])
 
-export const DATE_PARAMS = new Set([
+export const DATE_PARAMS: Set<DateParamLike> = new Set([
 	'published-max',
 	'published-min',
 	'updated-max',

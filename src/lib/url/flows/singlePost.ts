@@ -4,8 +4,9 @@ import { wit } from 'weaken-it'
 export type UrlLike = string | URL
 
 export const singlePost = (url: BFUrl) => {
-	// postId exists, can be safely added
-	url.pathname += `${wit(url, 'post')}`
+	// postId exists, can be safely added once
+	if (!url.pathname.includes(wit(url, 'post')))
+		url.pathname += `${wit(url, 'post')}`
 
 	// cleanup unrequired params
 	url.search = FEEDS_PARAMS + ''
