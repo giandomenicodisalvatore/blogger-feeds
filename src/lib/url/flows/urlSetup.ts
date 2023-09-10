@@ -1,27 +1,27 @@
 import {
 	type BFUrl,
 	FEEDS_PATH,
-	FEEDS_PARAMS,
 	getPostId,
 	paginatedPosts,
 	singlePost,
 } from '@lib'
 import { wSure } from 'weaken-it'
 
-export const urlSetup = (url: BFUrl) => {
-	// default path segment
+export function urlSetup(url: BFUrl, stringify?: false): BFUrl
+
+export function urlSetup(url: BFUrl, stringify: true): string
+
+export function urlSetup(url: any, stringify = false) {
+	const post = wSure(url, 'post', getPostId(url.pathname))
+
+	// default path
 	if (!url.pathname.includes(FEEDS_PATH))
 		url.pathname += FEEDS_PATH.substring(Number(url.pathname.endsWith('/')))
 
-	// default required params
-	FEEDS_PARAMS.forEach((v, k) => {
-		if (url.searchParams.get(k) !== v) url.searchParams.set(k, v)
-	})
+	// switch flow
+	url = typeof post === 'string' ? singlePost(url, post) : paginatedPosts(url)
 
-	// switch flow according to post
-	wSure(url, 'post', getPostId(url.pathname))
-		? singlePost(url)
-		: paginatedPosts(url)
-
-	return url
+	return stringify // consistency
+		? decodeURIComponent(URL.prototype.toString.apply(url))
+		: url
 }

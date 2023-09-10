@@ -28,13 +28,12 @@ export class BloggerFeedsUrl extends URL {
 	constructor(url: BloggerFeedsUrl | UrlLike, base?: UrlLike)
 	constructor(url: any, base: any) {
 		// normalization and compatibility
-		super(url + '', base)
+		super(decodeURIComponent(url + ''), base)
 		return urlSetup(this)
 	}
 
 	toString() {
-		// readability & consistency
-		return decodeURIComponent(URL.prototype.toString.apply(urlSetup(this)))
+		return urlSetup(this, true)
 	}
 
 	postId(post: UrlLike): this
@@ -133,17 +132,17 @@ export class BloggerFeedsUrl extends URL {
 		setSearchedParam(this, str)
 	}
 
-	withLabels(...labels: LabelLike[]): this
+	withLabels(labels: LabelLike[]): this
 	withLabels(): LabelLike[]
-	withLabels(...labels: any) {
+	withLabels(labels?: any) {
 		if (!arguments.length) return this['labels']
 		return (this['labels'] = labels), this
 	}
 	get ['labels'](): LabelLike[] {
 		return getLabelsParam(this)
 	}
-	set ['labels'](labels: LabelLike) {
-		setLabelsParam(this, labels)
+	set ['labels'](labels: LabelLike[]) {
+		setLabelsParam(this, structuredClone(labels))
 	}
 
 	clearLabels(): this {

@@ -1,16 +1,13 @@
-import { POSTID_RGX, type BFUrl, FEEDS_PARAMS } from '@lib'
-import { wit } from 'weaken-it'
+import { type BFUrl, FEEDS_PARAMS } from '@lib'
 
 export type UrlLike = string | URL
 
-export const singlePost = (url: BFUrl) => {
-	// postId exists, can be safely added once
-	if (!url.pathname.includes(wit(url, 'post')))
-		url.pathname += `${wit(url, 'post')}`
+export const singlePost = (url: BFUrl, post: string) => {
+	// only add post once
+	if (!url.pathname.includes(post)) url.pathname += post
 
-	// cleanup unrequired params
+	// cleanup all params
 	url.search = FEEDS_PARAMS + ''
-}
 
-export const getPostId = (str: UrlLike) =>
-	(str + '').match(POSTID_RGX)?.at(0) ?? null
+	return url.clearLabels()
+}

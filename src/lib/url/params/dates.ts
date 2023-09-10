@@ -9,11 +9,7 @@ export type DateParamLike =
 export const getDateParams = (url: BFUrl, par: DateParamLike) =>
 	(DATE_PARAMS.has(par) && url.searchParams.get(par)) || ''
 
-export const setDateParams = (
-	url: BFUrl,
-	par: DateParamLike,
-	date: DateLike,
-) => {
-	if (DATE_PARAMS.has(par) && (date = isoDateStr(date)))
-		return url.searchParams.set(par, date)
-}
+export const setDateParams = (url: BFUrl, par: DateParamLike, date: DateLike) =>
+	DATE_PARAMS.has(par) &&
+	(date = isoDateStr(date)) &&
+	url.searchParams.set(par, date)
