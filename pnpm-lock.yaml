@@ -33,8 +33,8 @@ devDependencies:
     specifier: ^0.34.4
     version: 0.34.4(@vitest/ui@0.34.4)
   weaken-it:
-    specifier: ^1.1.3
-    version: 1.1.3(tslib@2.6.2)
+    specifier: ^1.1.5
+    version: 1.1.5(tslib@2.6.2)
 
 packages:
 
@@ -1181,8 +1181,8 @@ packages:
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
     dev: true
 
-  /rollup@3.29.0:
-    resolution: {integrity: sha512-nszM8DINnx1vSS+TpbWKMkxem0CDWk3cSit/WWCBVs9/JZ1I/XLwOsiUglYuYReaeWWSsW9kge5zE5NZtf/a4w==}
+  /rollup@3.29.1:
+    resolution: {integrity: sha512-c+ebvQz0VIH4KhhCpDsI+Bik0eT8ZFEVZEYw0cGMVqIP8zc+gnwl7iXCamTw7vzv2MeuZFZfdx5JJIq+ehzDlg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -1433,7 +1433,7 @@ packages:
       '@types/node': 20.6.0
       esbuild: 0.18.20
       postcss: 8.4.29
-      rollup: 3.29.0
+      rollup: 3.29.1
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
@@ -1523,8 +1523,8 @@ packages:
       typescript: 5.2.2
     dev: true
 
-  /weaken-it@1.1.3(tslib@2.6.2):
-    resolution: {integrity: sha512-LM1URyoR/+1VNb3foBD3NIhauUkQ4ZQgOHLuwt/aO4EKyJM13NpO5bu5ddj1fqZhNYu/IdLa8Tkayy2/znqKHg==}
+  /weaken-it@1.1.5(tslib@2.6.2):
+    resolution: {integrity: sha512-W04UVnN/Tq3VhMtkZkUbEki4yY6i/8id1FdSIH3OsEpnvnE4KaMlfADU9dHv7fOpRjEg5Kzf9kHtSQcnLT/uLg==}
     engines: {node: 20.6.0, pnpm: 8.7.4}
     peerDependencies:
       tslib: ^2.6.2
