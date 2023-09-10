@@ -1,12 +1,10 @@
 import {
-	type DateParamLike,
 	FEEDS_PARAMS,
 	FEEDS_PATH,
+	DATE_PARAMS,
 	BloggerFeedsUrl,
 	BFUrl,
 	isoDateStr,
-	DATE_PARAMS,
-	LabelLike,
 } from '@lib'
 
 describe('BloggerFeedsUrl', () => {
@@ -326,20 +324,16 @@ describe('BloggerFeedsUrl', () => {
 				expect(chainApi + '').toBe(urlApi + '')
 			})
 
-			it.todo('can be cleared', () => {
-				urlApi.labels = [single, joined]
-				expect(urlApi + '').toContain(single)
-				chainApi.withLabels([single, joined])
-				expect(chainApi + '').toContain(single)
+			it('can be cleared', () => {
+				// why can't reuse urlApi and chainApi
+				const cleared = new BFUrl(example)
 
-				// TODO: clear labels is broken?
+				cleared.labels = [single]
+				cleared.withLabels(joined)
+				cleared.clearLabels()
 
-				urlApi.clearLabels()
-				expect(urlApi + '').not.toContain(single)
-				chainApi.clearLabels()
-				expect(chainApi + '').not.toContain(single)
-
-				expect(chainApi + '').toBe(urlApi + '')
+				expect(cleared).toEqual(defaultPaginated)
+				expect(cleared.labels).toEqual([])
 			})
 		})
 	})

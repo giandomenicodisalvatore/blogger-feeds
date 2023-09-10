@@ -1,6 +1,6 @@
 {
   "name": "blogger-feeds",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "Blogspot feeds client and utilities",
   "homepage": "https://github.com/giandomenicodisalvatore/blogger-feeds",
   "repository": {
