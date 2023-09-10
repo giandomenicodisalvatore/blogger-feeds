@@ -6,6 +6,7 @@ import {
 	BFUrl,
 	isoDateStr,
 	DATE_PARAMS,
+	LabelLike,
 } from '@lib'
 
 describe('BloggerFeedsUrl', () => {
@@ -69,8 +70,8 @@ describe('BloggerFeedsUrl', () => {
 		})
 
 		it('idempotent with native URL api', () => {
-			chainApi.withLabels('xxx')
-			urlApi.labels = 'xxx'
+			chainApi.withLabels(['xxx'])
+			urlApi.labels = ['xxx']
 			expected = new URL(defaultPaginated)
 			expected.searchParams.set('q', 'label:xxx')
 			expected.searchParams.sort()
@@ -95,7 +96,7 @@ describe('BloggerFeedsUrl', () => {
 			expect(chainApi.searchParams.get('max-results')).toEqual('123')
 			chainApi.startIndex(123)
 			expect(chainApi.searchParams.get('start-index')).toEqual('123')
-			chainApi.withLabels('xxx')
+			chainApi.withLabels(['xxx'])
 			expect(chainApi.labels).toEqual(['xxx'])
 			chainApi.withSearch('my terms')
 			expect(chainApi.searchParams.get('q')).toEqual('my terms')
@@ -135,7 +136,7 @@ describe('BloggerFeedsUrl', () => {
 
 		it('only keeps required params', () => {
 			const postReset = new BFUrl(
-				new BFUrl(examplePost).withSearch('my terms').withLabels('xxx'),
+				new BFUrl(examplePost).withSearch('my terms').withLabels(['xxx']),
 			)
 			expect(postReset.searched).toBe('')
 			expect(postReset.labels).toEqual([])
@@ -152,6 +153,9 @@ describe('BloggerFeedsUrl', () => {
 	})
 
 	describe('paginated posts flow', () => {
+		const myTerms = 'my search terms',
+			myLabel = ['xxx']
+
 		let urlApi: BFUrl, chainApi: BFUrl
 
 		beforeEach(() => {
@@ -256,9 +260,6 @@ describe('BloggerFeedsUrl', () => {
 		})
 
 		describe('search filtering', () => {
-			const myTerms = 'my search terms',
-				label = 'xxx'
-
 			it('configurable via withSearch() or searched', () => {
 				chainApi.withSearch(myTerms)
 				urlApi.searched = myTerms
@@ -275,35 +276,70 @@ describe('BloggerFeedsUrl', () => {
 			})
 
 			it('merges with labels', () => {
-				const expected = `q=label:${label} ${myTerms}`.replace(/\ /g, '+')
+				const expected = 'q=label:xxx+my+search+terms'
 
-				chainApi.withSearch(myTerms).withLabels(label)
-				urlApi.searched = myTerms
-				urlApi.labels = label
-
-				expect(urlApi + '').toContain(expected)
+				chainApi.withSearch(myTerms).withLabels(myLabel)
 				expect(chainApi + '').toContain(expected)
+
+				urlApi.labels = myLabel
+				urlApi.searched = myTerms
+				expect(urlApi + '').toContain(expected)
+
+				expect(urlApi + '').toBe(chainApi + '')
 			})
 		})
 
 		describe('labels filtering', () => {
-			const joined = ['xxx', 'yyy'],
+			const urlParam = 'q=label:xxx,yyy|label:zzz',
+				joined = ['xxx', 'yyy'],
 				single = 'zzz'
 
-			it.todo('configurable via withLabels() or labels', () => {
-				// ...
+			it('configurable via withLabels() or labels', () => {
+				urlApi.labels = [single, joined]
+				expect(urlApi.labels).toEqual([joined, single])
+
+				chainApi.withLabels([single, joined])
+				expect(chainApi.labels).toEqual([joined, single])
+
+				expect(chainApi.withLabels()).toEqual(urlApi.labels)
+				expect(chainApi + '').toEqual(urlApi + '')
 			})
 
-			it.todo('conforms to blogspot', () => {
-				// ...
+			it('conforms to blogspot', () => {
+				urlApi.labels = [single, joined]
+				expect(urlApi + '').toContain(urlParam)
+
+				chainApi.withLabels([single, joined])
+				expect(chainApi + '').toContain(urlParam)
 			})
 
-			it.todo('merges with searched', () => {
-				// ...
+			it('merges with searched', () => {
+				const merged = `${urlParam} ${myTerms}`.replace(/\ /g, '+')
+
+				urlApi.searched = myTerms
+				urlApi.labels = [single, joined]
+				expect(urlApi + '').toContain(merged)
+
+				chainApi.withSearch(myTerms).withLabels([single, joined])
+				expect(chainApi + '').toContain(merged)
+
+				expect(chainApi + '').toBe(urlApi + '')
 			})
 
 			it.todo('can be cleared', () => {
-				// ...
+				urlApi.labels = [single, joined]
+				expect(urlApi + '').toContain(single)
+				chainApi.withLabels([single, joined])
+				expect(chainApi + '').toContain(single)
+
+				// TODO: clear labels is broken?
+
+				urlApi.clearLabels()
+				expect(urlApi + '').not.toContain(single)
+				chainApi.clearLabels()
+				expect(chainApi + '').not.toContain(single)
+
+				expect(chainApi + '').toBe(urlApi + '')
 			})
 		})
 	})
