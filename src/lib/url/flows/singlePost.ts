@@ -1,8 +1,8 @@
-import { type BFUrl, FEEDS_PARAMS } from '@lib'
+import { type BFurl, FEEDS_PARAMS } from '@lib'
 
 export type UrlLike = string | URL
 
-export const singlePost = (url: BFUrl, post: string) => {
+export const singlePost = (url: BFurl, post: string) => {
 	// only add post once
 	if (!url.pathname.includes(post)) url.pathname += post
 

@@ -1,15 +1,15 @@
-import { DATE_PARAMS, isoDateStr, type DateLike, type BFUrl } from '@lib'
+import {
+	type DateParamLike,
+	type DateLike,
+	type BFurl,
+	DATE_PARAMS,
+	isoDateStr,
+} from '@lib'
 
-export type DateParamLike =
-	| 'published-max'
-	| 'published-min'
-	| 'updated-max'
-	| 'updated-min'
-
-export const getDateParams = (url: BFUrl, par: DateParamLike) =>
+export const getDateParams = (url: BFurl, par: DateParamLike) =>
 	(DATE_PARAMS.has(par) && url.searchParams.get(par)) || ''
 
-export const setDateParams = (url: BFUrl, par: DateParamLike, date: DateLike) =>
+export const setDateParams = (url: BFurl, par: DateParamLike, date: DateLike) =>
 	DATE_PARAMS.has(par) &&
 	(date = isoDateStr(date)) &&
 	url.searchParams.set(par, date)

@@ -1,5 +1,5 @@
 import {
-	type BFUrl,
+	type BFurl,
 	FEEDS_PATH,
 	getPostId,
 	paginatedPosts,
@@ -7,9 +7,9 @@ import {
 } from '@lib'
 import { wSure } from 'weaken-it'
 
-export function urlSetup(url: BFUrl, stringify?: false): BFUrl
+export function urlSetup(url: BFurl, stringify?: false): BFurl
 
-export function urlSetup(url: BFUrl, stringify: true): string
+export function urlSetup(url: BFurl, stringify: true): string
 
 export function urlSetup(url: any, stringify = false) {
 	const post = wSure(url, 'post', getPostId(url.pathname))

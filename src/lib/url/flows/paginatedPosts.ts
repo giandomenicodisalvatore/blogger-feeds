@@ -1,6 +1,6 @@
-import { type BFUrl, FEEDS_PARAMS, ALLOWED_PARAMS, stringifyLabels } from '@lib'
+import { type BFurl, FEEDS_PARAMS, ALLOWED_PARAMS, stringifyLabels } from '@lib'
 
-export const paginatedPosts = (url: BFUrl) => {
+export const paginatedPosts = (url: BFurl) => {
 	// default required params
 	FEEDS_PARAMS.forEach(
 		(v, k) => url.searchParams.get(k) !== v && url.searchParams.set(k, v),
