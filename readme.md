@@ -92,7 +92,7 @@ console.log(PaginatedPosts + '')
 ## :ballot_box_with_check: TODO
 
 [ ] Other utilities and wrappers
-[ ] Minimal Tests
+[ ] Update Tests
 [ ] Write jsdocs
 [ ] Documentation
 

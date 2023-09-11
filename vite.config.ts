@@ -6,6 +6,11 @@ import PKG from './package.json'
 import { resolve } from 'path'
 
 export default defineConfig({
+	server: {
+		// please make it standard!
+		port: 3000,
+	},
+
 	resolve: {
 		alias: {
 			'@lib': resolve(__dirname, './src/lib/index'),
