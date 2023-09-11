@@ -3,6 +3,7 @@ import {
 	type DateLike,
 	type LabelLike,
 	type DateParamLike,
+	type BloggerOrderBy,
 	urlSetup,
 	getPostParam,
 	setPostParam,
@@ -10,6 +11,8 @@ import {
 	setMaxResultsParam,
 	getOrderByParam,
 	setOrderByParam,
+	getStartIndexParam,
+	setStartIndexParam,
 	getDateParams,
 	setDateParams,
 	getSearchedParam,
@@ -17,18 +20,14 @@ import {
 	getLabelsParam,
 	setLabelsParam,
 	clearLabels,
-	getStartIndexParam,
-	setStartIndexParam,
-	BloggerOrderBy,
 } from '@lib'
 
-export { BloggerFeedsUrl as BFUrl }
+export { BloggerFeedsUrl as BFurl }
 
 export class BloggerFeedsUrl extends URL {
-	constructor(url: BloggerFeedsUrl | UrlLike, base?: UrlLike)
-	constructor(url: any, base: any) {
+	constructor(conf: BloggerFeedsUrl | UrlLike, base?: UrlLike) {
 		// normalization and compatibility
-		super(decodeURIComponent(url + ''), base)
+		super(decodeURIComponent(conf + ''), base)
 		return urlSetup(this)
 	}
 
@@ -37,12 +36,12 @@ export class BloggerFeedsUrl extends URL {
 	}
 
 	postId(post: UrlLike): this
-	postId(): string
+	postId(): string | null
 	postId(post?: any) {
 		if (!arguments.length) return this.post
 		return post && (this.post = post), this
 	}
-	get ['post']() {
+	get ['post'](): string | null {
 		return getPostParam(this)
 	}
 	set ['post'](post: UrlLike) {
