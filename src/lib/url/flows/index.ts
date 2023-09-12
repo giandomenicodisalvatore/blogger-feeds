@@ -1,3 +1,3 @@
-export * from './paginatedPosts'
-export * from './singlePost'
+export * from './paginated'
+export * from './single'
 export * from './urlSetup'

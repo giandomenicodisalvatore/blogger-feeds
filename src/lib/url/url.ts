@@ -1,31 +1,29 @@
 import {
-	type UrlLike,
-	type DateLike,
-	type LabelLike,
 	type DateParamLike,
-	type BloggerOrderBy,
+	type OrderbyLike,
+	type LabelLike,
+	type DateLike,
+	type UrlLike,
 	urlSetup,
-	getPostParam,
-	setPostParam,
-	getMaxResultsParam,
-	setMaxResultsParam,
-	getOrderByParam,
-	setOrderByParam,
-	getStartIndexParam,
-	setStartIndexParam,
-	getDateParams,
-	setDateParams,
-	getSearchedParam,
-	setSearchedParam,
-	getLabelsParam,
-	setLabelsParam,
+	getPost,
+	setPost,
+	getOrderBy,
+	setOrderBy,
+	getMaxResults,
+	setMaxResults,
+	getStartIndex,
+	setStartIndex,
+	getDates,
+	setDates,
+	getSearched,
+	setSearched,
+	getLabels,
+	setLabels,
 	clearLabels,
 } from '@lib'
 
-export { BloggerFeedsUrl as BFurl }
-
-export class BloggerFeedsUrl extends URL {
-	constructor(conf: BloggerFeedsUrl | UrlLike, base?: UrlLike) {
+export class BFurl extends URL {
+	constructor(conf: BFurl | UrlLike, base?: UrlLike) {
 		// normalization and compatibility
 		super(decodeURIComponent(conf + ''), base)
 		return urlSetup(this)
@@ -42,10 +40,10 @@ export class BloggerFeedsUrl extends URL {
 		return post && (this.post = post), this
 	}
 	get ['post'](): string | null {
-		return getPostParam(this)
+		return getPost(this)
 	}
 	set ['post'](post: UrlLike) {
-		setPostParam(this, post)
+		setPost(this, post)
 	}
 
 	maxResults(num: number): this
@@ -55,10 +53,10 @@ export class BloggerFeedsUrl extends URL {
 		return (this['max-results'] = num), this
 	}
 	get ['max-results'](): number | null {
-		return getMaxResultsParam(this)
+		return getMaxResults(this)
 	}
 	set ['max-results'](num: number) {
-		setMaxResultsParam(this, num)
+		setMaxResults(this, num)
 	}
 
 	startIndex(num: number): this
@@ -68,23 +66,23 @@ export class BloggerFeedsUrl extends URL {
 		return (this['start-index'] = num), this
 	}
 	get ['start-index'](): number | null {
-		return getStartIndexParam(this)
+		return getStartIndex(this)
 	}
 	set ['start-index'](num: number) {
-		setStartIndexParam(this, num)
+		setStartIndex(this, num)
 	}
 
-	orderBy(str: BloggerOrderBy): this
-	orderBy(): BloggerOrderBy | null
+	orderBy(str: OrderbyLike): this
+	orderBy(): OrderbyLike | null
 	orderBy(str?: any) {
 		if (!arguments.length) return this['orderby']
 		return (this['orderby'] = str), this
 	}
-	get ['orderby'](): BloggerOrderBy | null {
-		return getOrderByParam(this)
+	get ['orderby'](): OrderbyLike | null {
+		return getOrderBy(this)
 	}
-	set ['orderby'](str: BloggerOrderBy) {
-		setOrderByParam(this, str)
+	set ['orderby'](str: OrderbyLike) {
+		setOrderBy(this, str)
 	}
 
 	dateParams(param: DateParamLike, date: DateLike): this
@@ -94,28 +92,28 @@ export class BloggerFeedsUrl extends URL {
 		return date && (this[param] = date), this
 	}
 	get ['published-max']() {
-		return getDateParams(this, 'published-max')
+		return getDates(this, 'published-max')
 	}
 	set ['published-max'](date: DateLike) {
-		setDateParams(this, 'published-max', date)
+		setDates(this, 'published-max', date)
 	}
 	get ['published-min']() {
-		return getDateParams(this, 'published-min')
+		return getDates(this, 'published-min')
 	}
 	set ['published-min'](date: DateLike) {
-		setDateParams(this, 'published-min', date)
+		setDates(this, 'published-min', date)
 	}
 	get ['updated-max']() {
-		return getDateParams(this, 'updated-max')
+		return getDates(this, 'updated-max')
 	}
 	set ['updated-max'](date: DateLike) {
-		setDateParams(this, 'updated-max', date)
+		setDates(this, 'updated-max', date)
 	}
 	get ['updated-min']() {
-		return getDateParams(this, 'updated-min')
+		return getDates(this, 'updated-min')
 	}
 	set ['updated-min'](date: DateLike) {
-		setDateParams(this, 'updated-min', date)
+		setDates(this, 'updated-min', date)
 	}
 
 	withSearch(str: string): this
@@ -125,10 +123,10 @@ export class BloggerFeedsUrl extends URL {
 		return (this['searched'] = str), this
 	}
 	get ['searched']() {
-		return getSearchedParam(this)
+		return getSearched(this)
 	}
 	set ['searched'](str: string) {
-		setSearchedParam(this, str)
+		setSearched(this, str)
 	}
 
 	withLabels(labels: LabelLike[]): this
@@ -138,10 +136,10 @@ export class BloggerFeedsUrl extends URL {
 		return (this['labels'] = labels), this
 	}
 	get ['labels'](): LabelLike[] {
-		return getLabelsParam(this)
+		return getLabels(this)
 	}
 	set ['labels'](labels: LabelLike[]) {
-		setLabelsParam(this, structuredClone(labels))
+		setLabels(this, structuredClone(labels))
 	}
 
 	clearLabels(): this {

@@ -1,7 +1,10 @@
-import { type BloggerOrderBy, type BFurl, ALLOWED_ORDERBY } from '@lib'
+import { type BFurl } from '@lib'
 
-export const getOrderByParam = (url: BFurl): BloggerOrderBy | null =>
-	url.searchParams.get('orderby') as BloggerOrderBy
+export const OK_ORDERBY = new Set(['published', 'updated'])
+export type OrderbyLike = 'published' | 'updated'
 
-export const setOrderByParam = (url: BFurl, str: BloggerOrderBy) =>
-	ALLOWED_ORDERBY.has(str) && url.searchParams.set('orderby', str)
+export const getOrderBy = (url: BFurl): OrderbyLike | null =>
+	url.searchParams.get('orderby') as OrderbyLike
+
+export const setOrderBy = (url: BFurl, str: OrderbyLike) =>
+	OK_ORDERBY.has(str) && url.searchParams.set('orderby', str)

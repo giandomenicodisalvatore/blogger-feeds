@@ -1,9 +1,9 @@
 import {
 	type BFurl,
-	FEEDS_PATH,
+	paginatedFlow,
+	singleFlow,
 	getPostId,
-	paginatedPosts,
-	singlePost,
+	REQ_PATH,
 } from '@lib'
 import { wSure } from 'weaken-it'
 
@@ -15,13 +15,15 @@ export function urlSetup(url: any, stringify = false) {
 	const post = wSure(url, 'post', getPostId(url.pathname))
 
 	// default path
-	if (!url.pathname.includes(FEEDS_PATH))
-		url.pathname += FEEDS_PATH.substring(Number(url.pathname.endsWith('/')))
+	if (!url.pathname.includes(REQ_PATH))
+		url.pathname += REQ_PATH.substring(Number(url.pathname.endsWith('/')))
 
 	// switch flow
-	url = typeof post === 'string' ? singlePost(url, post) : paginatedPosts(url)
+	url = typeof post === 'string' ? singleFlow(url, post) : paginatedFlow(url)
 
-	return stringify // consistency
-		? decodeURIComponent(URL.prototype.toString.apply(url))
-		: url
+	if (stringify)
+		// consistency
+		url = decodeURIComponent(URL.prototype.toString.apply(url))
+
+	return url
 }

@@ -1,13 +1,14 @@
-import { type BFurl, FEEDS_PARAMS } from '@lib'
+import { type BFurl, REQ_PARAMS } from '@lib'
 
 export type UrlLike = string | URL
 
-export const singlePost = (url: BFurl, post: string) => {
+export const singleFlow = (url: BFurl, post: string) => {
 	// only add post once
 	if (!url.pathname.includes(post)) url.pathname += post
 
 	// cleanup all params
-	url.search = FEEDS_PARAMS + ''
+	url.search = REQ_PARAMS + ''
 
+	// and labels
 	return url.clearLabels()
 }

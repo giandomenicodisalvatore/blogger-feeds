@@ -1,16 +1,13 @@
 export {
-	// raw url builder
-	BloggerFeedsUrl,
+	// url builder
 	BFurl,
 
-	// client wrappers
-	makeBloggerFeedsUrl,
+	// blogger wrappers
 	BFmake,
-	fetchBloggerFeeds,
 	BFfetch,
+	BFformat,
 
-	// spare utils
-	fetchJson,
-	isoDateStr,
-	numClamp,
+	// blogger utils
+	BFthumb,
+	BFytimg,
 } from '@lib'

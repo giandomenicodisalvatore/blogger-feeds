@@ -1,6 +1,6 @@
 import {
-	FEEDS_PARAMS,
-	FEEDS_PATH,
+	REQ_PARAMS,
+	REQ_PATH,
 	DATE_PARAMS,
 	BloggerFeedsUrl,
 	BFurl,
@@ -11,7 +11,7 @@ describe('BloggerFeedsUrl', () => {
 	const example = new URL(
 			import.meta.env.VITE_EXAMPLE_BLOG ?? 'https://example.com',
 		),
-		baseFeeds = `${example}${FEEDS_PATH.substring(1)}?${FEEDS_PARAMS}`,
+		baseFeeds = `${example}${REQ_PATH.substring(1)}?${REQ_PARAMS}`,
 		defaultPaginated = new URL(
 			baseFeeds + '&orderby=published&max-results=150',
 		),
