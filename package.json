@@ -40,11 +40,11 @@
   "license": "MIT",
   "volta": {
     "node": "20.6.0",
-    "pnpm": "8.7.4"
+    "pnpm": "8.7.5"
   },
   "engines": {
     "node": "20.6.0",
-    "pnpm": "8.7.4"
+    "pnpm": "8.7.5"
   },
   "devDependencies": {
     "@types/node": "^20.6.0",
