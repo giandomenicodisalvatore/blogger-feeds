@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-	readonly EXAMPLE_BLOG: string
+	readonly VITE_EXAMPLE_BLOG: string
 	// more env vars
 }
 

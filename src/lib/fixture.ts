@@ -29,10 +29,14 @@ export const DATE_PARAMS: Set<DateParamLike> = new Set([
 ])
 
 export const ALLOWED_PARAMS = new Set([
+	// always
 	...FEEDS_PARAMS.keys(),
-	...DATE_PARAMS,
+	// pagination
 	'max-results',
 	'orderby',
+	// optional
+	...DATE_PARAMS,
+	'start-index',
 	'q',
 ])
 
