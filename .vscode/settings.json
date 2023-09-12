@@ -4,6 +4,7 @@
     "build",
     "utils",
     "types",
-    "url builder"
+    "url builder",
+    "client"
   ]
 }

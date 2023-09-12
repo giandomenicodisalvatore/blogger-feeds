@@ -1,18 +1,33 @@
 import {
-	type BloggerConf,
+	type BFPaginatedData,
+	type BFPostData,
 	type UrlLike,
+	type BFconf,
 	type BFurl,
-	fetchJson,
+	BFformat,
 	BFmake,
 } from '@lib'
 
-export { fetchBloggerFeeds as BFfetch }
-
-export function fetchBloggerFeeds(conf: BloggerConf): Promise<any>
-export function fetchBloggerFeeds(
-	conf: UrlLike | BFurl,
-	blog: UrlLike,
-): Promise<any>
-export function fetchBloggerFeeds(conf: any, blog?: any) {
-	return fetchJson(BFmake(conf, blog) + '')
+const RequestOpt = {
+	headers: { accept: 'application/json' },
+	keepalive: true,
 }
+
+export function BFfetch(conf: BFconf): Promise<BFData>
+export function BFfetch(conf: UrlLike | BFurl, blog: UrlLike): Promise<BFData>
+export async function BFfetch(conf: any, blog?: any) {
+	try {
+		let data: any = await fetch(BFmake(conf, blog) ?? 'invalid url', RequestOpt)
+		if (!data.ok) throw data
+
+		data = await data.json()
+		data = BFformat(data)
+		return data
+	} catch (e) {
+		return { error: e } as BFError
+	}
+}
+
+export type BFData = BFPostData | BFPaginatedData | BFError
+
+export type BFError = { error: any }

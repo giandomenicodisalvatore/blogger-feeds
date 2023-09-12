@@ -1,22 +1,20 @@
 import {
-	type BloggerOrderBy,
+	type OrderbyLike,
 	type LabelLike,
 	type DateLike,
 	type UrlLike,
 	BFurl,
 } from '@lib'
 
-export type BloggerBlog = {
+export type BFpostConf = {
 	blog: UrlLike
-}
-
-export type BloggerPost = BloggerBlog & {
 	post: UrlLike
 }
 
-export type BloggerPaginated = BloggerBlog & {
+export type BFpaginatedConf = {
+	blog: UrlLike
 	// paginated
-	orderby?: BloggerOrderBy
+	orderby?: OrderbyLike
 	'max-results'?: number
 	'start-index'?: number
 	searched?: string
@@ -27,14 +25,26 @@ export type BloggerPaginated = BloggerBlog & {
 	'updated-min'?: DateLike
 }
 
-export type BloggerConf = BloggerPost | BloggerPaginated
+export type BFconf = BFpostConf | BFpaginatedConf
 
-export { makeBloggerFeedsUrl as BFmake }
+export const safeUrl = (url: UrlLike, base?: UrlLike) => {
+	try {
+		url = new URL(decodeURIComponent(url + ''), base)
+		return url
+	} catch {
+		return null
+	}
+}
 
-export function makeBloggerFeedsUrl(conf: BloggerConf): BFurl
-export function makeBloggerFeedsUrl(conf: UrlLike | BFurl, blog: UrlLike): BFurl
-export function makeBloggerFeedsUrl(conf: any, blog?: any) {
-	return typeof conf?.blog !== 'undefined'
-		? Object.assign(new BFurl(conf.blog), conf)
-		: new BFurl(conf, blog)
+export function BFmake(conf: BFconf | BFurl | UrlLike): BFurl | null
+export function BFmake(conf: BFurl | UrlLike, blog: UrlLike): BFurl | null
+export function BFmake(conf: any, blog?: any) {
+	try {
+		const url =
+			(safeUrl(conf, blog) && new BFurl(conf, blog)) ||
+			Object.assign(new BFurl(conf.blog), conf)
+		return url
+	} catch {
+		return null
+	}
 }
