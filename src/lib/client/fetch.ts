@@ -3,7 +3,7 @@ import {
 	type BFPostData,
 	type UrlLike,
 	type BFpick,
-	type BFconf,
+	type BFurlconf,
 	type BFurl,
 	BFformat,
 	BFmake,
@@ -14,46 +14,43 @@ const FETCH_OPT = {
 	keepalive: true,
 }
 
-export type BFfetchconf = BFconf & {
-	signal: AbortSignal
+export type BFfetchconf = BFurlconf & {
+	signal?: AbortSignal
 	pick?: BFpick
 }
 
-export type BFData = BFPostData | BFPaginatedData | BFError
+export type BFdata = BFPostData | BFPaginatedData | BFerr
 
-export type BFError = {
+export type BFerr = {
 	url: BFurl | null
 	err: Error | any
 	res?: Response
 }
 
-export function BFfetch(conf: BFfetchconf): Promise<BFData>
-export function BFfetch(conf: UrlLike, blog?: UrlLike): Promise<BFData>
+export function BFfetch(conf: BFfetchconf): Promise<BFdata>
+export function BFfetch(conf: UrlLike, blog?: UrlLike): Promise<BFdata>
 export async function BFfetch(conf: any, blog?: any) {
 	let data, url, res
 
 	try {
-		// create url and separate pick
-		url = BFmake(conf, blog) as BFurl | null
+		url = BFmake(conf, blog)
 		if (!url) throw new Error('URL_ERROR')
 
-		// untouched for debugging
-		res = (await fetch(url + '', {
-			...FETCH_OPT,
-			signal: conf?.signal,
-		})) as Response
+		// copy for debugging
+		res = await fetch(url + '', { ...FETCH_OPT, signal: conf?.signal })
 		if (!res.ok) throw new Error('RESPONSE_ERROR')
 
-		// consume a clone
+		// copy to consume
 		data = await res.clone().json()
-		data = BFformat(data, conf?.pick) as BFPostData | BFPaginatedData
+		data = BFformat(data, conf?.pick)
 
 		// cleanup
 		url = res = conf = blog = null
-	} catch (err: Error | any) {
-		// or error
-		data = { url, err, res } as BFError
+
+		// throw
+	} catch (err) {
+		data = { url, err, res }
 	}
 
-	return data
+	return data as BFdata
 }

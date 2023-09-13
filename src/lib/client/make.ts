@@ -25,7 +25,7 @@ export type BFpaginatedConf = {
 	'updated-min'?: DateLike
 }
 
-export type BFconf = BFpostConf | BFpaginatedConf
+export type BFurlconf = BFpostConf | BFpaginatedConf
 
 export const safeUrl = (url: UrlLike, base?: UrlLike) => {
 	try {
@@ -36,8 +36,8 @@ export const safeUrl = (url: UrlLike, base?: UrlLike) => {
 	}
 }
 
-export function BFmake(conf: BFconf | BFurl | UrlLike): BFurl | null
-export function BFmake(conf: BFurl | UrlLike, blog: UrlLike): BFurl | null
+export function BFmake(conf: BFurlconf): BFurl | null
+export function BFmake(conf: BFurl | UrlLike, blog?: UrlLike): BFurl | null
 export function BFmake(conf: any, blog?: any) {
 	try {
 		const url =

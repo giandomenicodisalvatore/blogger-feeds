@@ -3,9 +3,10 @@ export {
 	BFurl,
 
 	// blogger wrappers
-	BFmake,
-	BFfetch,
+	BFclient,
 	BFformat,
+	BFfetch,
+	BFmake,
 
 	// blogger utils
 	BFthumb,
