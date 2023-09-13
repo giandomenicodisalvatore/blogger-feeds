@@ -6,44 +6,62 @@ import {
 	PostSchema,
 } from '@lib'
 
-const consumeFn = (
-	schema: typeof MetaSchema | typeof PostSchema,
-	choice: Set<BFpick>,
-	raw: any,
-	meta?: any,
-) => {
+// everything depends on these props
+const REQ_PROPS: BFprops[] = ['blog', 'post']
+
+const consumeFn = ({
+	schema,
+	choice,
+	raw,
+	meta,
+}: {
+	schema: typeof MetaSchema | typeof PostSchema
+	choice: Set<BFprops>
+	raw: any
+	meta?: any
+}) => {
 	const final: any = {}
 
 	for (const [key, fn] of schema)
 		if (choice.has('*') || choice.has(key))
-			// if chosen, save data or default
 			final[key] = fn(raw, meta || final) || null
 
 	return final
 }
 
-export const BFformat = ({ feed, entry }: any, pick: BFpick[] = ['*']) => {
-	const choice = new Set(
-			Array.isArray(pick) // only select when array
-				? pick.concat('blog', 'post') // required
-				: ['*'], // keeps all by default
-		) as Set<BFpick>,
-		// feed if paginated or default to entry when post
-		meta = consumeFn(MetaSchema, choice, feed || entry),
-		data: BFPost[] = []
+const normalizeChoice = (pick: BFpick) => {
+	pick = Array.isArray(pick)
+		? (pick.length && pick.concat(REQ_PROPS)) || []
+		: ['*']
+	return new Set(pick)
+}
 
-	// reuse for single post && consume once
-	feed ??= { entry: [entry] }
+export const BFformat = (
+	{ feed, entry }: Record<string, any> = {},
+	pick: BFpick = '*',
+) => {
+	const data: BFPost[] = [],
+		choice = normalizeChoice(pick),
+		meta = consumeFn({
+			// flow detection
+			schema: MetaSchema,
+			raw: feed ?? entry,
+			choice,
+		})
 
-	// use original as a stack
+	if (meta.post) feed = { entry: [entry] }
+
 	while (feed?.entry?.length) {
-		// allocate memory for speed
-		const raw = feed.entry.shift(),
-			post = consumeFn(PostSchema, choice, raw, meta)
+		const post = consumeFn({
+			schema: PostSchema,
+			raw: feed.entry.shift(),
+			choice,
+			meta,
+		})
 		data.push(post)
 	}
 
-	return meta.post // now we know it's a single post
+	return meta.post // enforce types
 		? ({ meta, data: data.at(0) } as BFPostData)
 		: ({ meta, data } as BFPaginatedData)
 }
@@ -58,7 +76,9 @@ export type BFPaginatedData = {
 	data: BFPost[]
 }
 
-export type BFpick =
+export type BFpick = '*' | BFprops[]
+
+export type BFprops =
 	| keyof BFPaginatedMeta
 	| keyof BFPostMeta
 	| keyof BFPost
