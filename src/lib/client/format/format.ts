@@ -6,35 +6,46 @@ import {
 	PostSchema,
 } from '@lib'
 
-const formatterFn = (
+const consumeFn = (
 	schema: typeof MetaSchema | typeof PostSchema,
+	choice: Set<BFpick>,
 	raw: any,
 	meta?: any,
 ) => {
-	const formatted: any = {}
+	const final: any = {}
 
 	for (const [key, fn] of schema)
-		formatted[key] = fn(raw, meta || formatted) || null
+		if (choice.has('*') || choice.has(key))
+			// if chosen, save data or default
+			final[key] = fn(raw, meta || final) || null
 
-	return formatted
+	return final
 }
 
-export const BFformat = ({ feed, entry }: any) => {
-	const meta = formatterFn(MetaSchema, feed || entry),
-		data: any[] = []
+export const BFformat = ({ feed, entry }: any, pick: BFpick[] = ['*']) => {
+	const choice = new Set(
+			Array.isArray(pick) // only select when array
+				? pick.concat('blog', 'post') // required
+				: ['*'], // keeps all by default
+		) as Set<BFpick>,
+		// feed if paginated or default to entry when post
+		meta = consumeFn(MetaSchema, choice, feed || entry),
+		data: BFPost[] = []
 
-	while ((feed ??= { entry: [entry] })?.entry?.length)
-		data.push(formatterFn(PostSchema, feed.entry.shift(), meta))
+	// reuse for single post && consume once
+	feed ??= { entry: [entry] }
 
-	return meta.post
-		? ({
-				data: data.at(0),
-				meta,
-		  } as BFPostData)
-		: ({
-				data,
-				meta,
-		  } as BFPaginatedData)
+	// use original as a stack
+	while (feed?.entry?.length) {
+		// allocate memory for speed
+		const raw = feed.entry.shift(),
+			post = consumeFn(PostSchema, choice, raw, meta)
+		data.push(post)
+	}
+
+	return meta.post // now we know it's a single post
+		? ({ meta, data: data.at(0) } as BFPostData)
+		: ({ meta, data } as BFPaginatedData)
 }
 
 export type BFPostData = {
@@ -46,3 +57,9 @@ export type BFPaginatedData = {
 	meta: BFPaginatedMeta
 	data: BFPost[]
 }
+
+export type BFpick =
+	| keyof BFPaginatedMeta
+	| keyof BFPostMeta
+	| keyof BFPost
+	| '*'

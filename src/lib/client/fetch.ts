@@ -6,6 +6,7 @@ import {
 	type BFurl,
 	BFformat,
 	BFmake,
+	BFpick,
 } from '@lib'
 
 const RequestOpt = {
@@ -13,21 +14,32 @@ const RequestOpt = {
 	keepalive: true,
 }
 
-export function BFfetch(conf: BFconf): Promise<BFData>
-export function BFfetch(conf: UrlLike | BFurl, blog: UrlLike): Promise<BFData>
-export async function BFfetch(conf: any, blog?: any) {
+export function BFfetch(
+	conf: BFconf & {
+		pick?: BFpick[]
+	},
+): Promise<BFData>
+export function BFfetch(
+	conf: UrlLike | BFurl,
+	blog?: UrlLike,
+	pick?: BFpick[],
+): Promise<BFData>
+export async function BFfetch(conf: any, blog?: any, pick?: any) {
+	let url, data
 	try {
-		let data: any = await fetch(BFmake(conf, blog) ?? 'invalid url', RequestOpt)
-		if (!data.ok) throw data
-
+		url = BFmake(conf, blog) ?? 'INVALID'
+		data = await fetch(url, RequestOpt)
 		data = await data.json()
-		data = BFformat(data)
-		return data
-	} catch (e) {
-		return { error: e } as BFError
+		return BFformat(data, conf?.pick ?? pick)
+	} catch (error) {
+		return { error, data, url } as BFError
 	}
 }
 
 export type BFData = BFPostData | BFPaginatedData | BFError
 
-export type BFError = { error: any }
+export type BFError = {
+	error: any
+	data?: any
+	url?: any
+}
