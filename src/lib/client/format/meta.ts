@@ -11,6 +11,7 @@ export type BFPostMeta = {
 	self: string
 	href: string
 	next: null
+	etag: string
 }
 
 export type BFPaginatedMeta = {
@@ -24,29 +25,31 @@ export type BFPaginatedMeta = {
 	self: string
 	href: null
 	next: string | null
+	etag: string
 }
 
 export const MetaSchema = new Map()
 	.set('blog', (raw: any) => {
-		return safeUrl(extractLink(raw?.link, 'alternate'))?.origin
+		return safeUrl(extractLink(raw?.link, 'alternate') ?? '')?.origin
 	})
 	.set('blogId', (raw: any) => extractIds(raw?.id?.$t)?.blog)
 	// meta.post is set only on single post flow
 	.set('post', (raw: any) => extractIds(raw?.id?.$t)?.post)
 	.set('updated', (raw: any) => isoDateStr(raw?.updated?.$t))
+	.set('etag', (raw: any) => raw?.gd$etag)
 	.set('total', (raw: any) => Number(raw?.openSearch$totalResults?.$t))
 	.set('start-index', (raw: any) => Number(raw?.openSearch$startIndex?.$t))
 	.set('max-results', (raw: any) => Number(raw?.openSearch$itemsPerPage?.$t))
 	.set('self', (raw: any, meta: any) => {
-		const paginated = safeUrl(extractLink(raw?.link, 'self'))
-		return BFmake(paginated ? '?' + paginated?.search : '', meta.blog)
+		const paginated = extractLink(raw?.link, 'self')
+		return BFmake(paginated ? '?' + paginated.search : '', meta.blog)
 			?.postId(meta.post)
 			?.toString()
 	})
 	.set('href', (raw: any, meta: any) => {
-		return meta.post && safeUrl(extractLink(raw?.link, 'alternate'))?.toString()
+		return meta.post && extractLink(raw?.link, 'alternate')?.toString()
 	})
 	.set('next', (raw: any, meta: any) => {
-		const next = safeUrl(extractLink(raw?.link, 'next'))
+		const next = extractLink(raw?.link, 'next')
 		return next && BFmake('?' + next.search, meta.blog)?.toString()
 	})

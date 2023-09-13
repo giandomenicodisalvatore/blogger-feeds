@@ -1,6 +1,6 @@
-import { UrlLike } from '@lib'
+import { UrlLike, safeUrl } from '@lib'
 
 export const extractLink = (
 	links: { rel: UrlLike; href?: UrlLike }[],
 	extracted: string,
-) => links?.find(({ rel }) => rel === extracted)?.href ?? ''
+) => safeUrl(links?.find(({ rel }) => rel === extracted)?.href ?? '')

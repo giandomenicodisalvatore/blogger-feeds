@@ -15,6 +15,7 @@ export type BFPost = {
 	authors: string[]
 	published: string
 	updated: string
+	etag: string
 	image: string | null
 	type: string
 	body: string
@@ -32,6 +33,7 @@ export const PostSchema = new Map()
 		if (meta.post) return meta.href
 		return extractLink(raw?.link, 'alternate')
 	})
+	.set('etag', (raw: any) => raw?.gd$etag)
 	.set('authors', (raw: any) => raw?.author?.map((a: any) => a?.name?.$t) ?? [])
 	.set('published', (raw: any) => isoDateStr(raw?.published?.$t))
 	.set('updated', (raw: any) => isoDateStr(raw?.updated?.$t))
