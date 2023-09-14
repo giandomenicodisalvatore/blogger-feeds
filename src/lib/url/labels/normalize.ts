@@ -1,6 +1,6 @@
-export type LabelLike = string | string[]
+export type BFLabel = string | string[]
 
-export const normalizeLabels = (label: LabelLike): string => {
+export const normalizeLabels = (label: BFLabel): string => {
 	let normalized: string[] = [],
 		lab
 

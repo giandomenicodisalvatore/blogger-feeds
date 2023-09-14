@@ -1,6 +1,6 @@
-import { type LabelLike } from '@lib'
+import { type BFLabel } from '@lib'
 
-export const stringifyLabels = (labels: LabelLike[]) => {
+export const stringifyLabels = (labels: BFLabel[]) => {
 	let stringed = ''
 
 	while (labels.length)

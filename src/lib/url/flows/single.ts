@@ -1,8 +1,6 @@
-import { type BFurl, REQ_PARAMS } from '@lib'
+import { type BFUrl, REQ_PARAMS } from '@lib'
 
-export type UrlLike = string | URL
-
-export const singleFlow = (url: BFurl, post: string) => {
+export const singleFlow = (url: BFUrl, post: string) => {
 	// only add post once
 	if (!url.pathname.includes(post)) url.pathname += post
 

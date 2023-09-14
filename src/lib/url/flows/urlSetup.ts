@@ -1,29 +1,27 @@
 import {
-	type BFurl,
+	type BFIds,
+	type BFUrl,
+	REQ_PATH,
 	paginatedFlow,
 	singleFlow,
-	getPostId,
-	REQ_PATH,
+	isBlogspot,
 } from '@lib'
-import { wSure } from 'weaken-it'
 
-export function urlSetup(url: BFurl, stringify?: false): BFurl
+export function urlSetup(url: BFUrl, ids: BFIds, str?: false): BFUrl
+export function urlSetup(url: BFUrl, ids: BFIds, str: true): string
+export function urlSetup(url: any, ids: any, str = false) {
+	if (!url.href.includes(REQ_PATH.slice(1, -1)))
+		// enforce default blogger path
+		url.pathname = REQ_PATH
 
-export function urlSetup(url: BFurl, stringify: true): string
-
-export function urlSetup(url: any, stringify = false) {
-	const post = wSure(url, 'post', getPostId(url.pathname))
-
-	// default path
-	if (!url.pathname.includes(REQ_PATH))
-		url.pathname += REQ_PATH.substring(Number(url.pathname.endsWith('/')))
+	// blogger adapter
+	if (isBlogspot(url.href) && ids.blog && !url.pathname.includes(ids.blog))
+		url.pathname = url.pathname.replace('feeds', `feeds/${ids.blog}`)
 
 	// switch flow
-	url = typeof post === 'string' ? singleFlow(url, post) : paginatedFlow(url)
+	url = ids.post ? singleFlow(url, ids.post) : paginatedFlow(url)
 
-	if (stringify)
-		// consistency
-		url = decodeURIComponent(URL.prototype.toString.apply(url))
-
-	return url
+	return str // for consistency
+		? decodeURIComponent(URL.prototype.toString.apply(url))
+		: url
 }

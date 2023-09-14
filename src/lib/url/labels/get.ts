@@ -1,7 +1,6 @@
-import { type BFurl, type LabelLike } from '@lib'
-import { wSure } from 'weaken-it'
+import { type BFLabel } from '@lib'
 
-export const getLabels = (url: BFurl): LabelLike[] =>
-	Array.from(wSure(url, 'labels', new Set()), (lab: LabelLike) =>
+export const getLabels = (store: Set<string>): BFLabel[] =>
+	Array.from(store, (lab: BFLabel) =>
 		(lab = (lab + '').split(',')).length === 1 ? lab[0] : lab,
 	).sort()

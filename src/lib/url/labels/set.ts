@@ -1,9 +1,7 @@
-import { type BFurl, type LabelLike, normalizeLabels } from '@lib'
-import { wSure } from 'weaken-it'
+import { type BFLabel, normalizeLabels } from '@lib'
 
-export const setLabels = (url: BFurl, labels: LabelLike[]) => {
-	let store = wSure(url, 'labels', new Set()),
-		single
+export const setLabels = (store: Set<string>, labels: BFLabel[]) => {
+	let single
 
 	while (labels.length)
 		(single = labels.shift()) &&

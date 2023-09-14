@@ -1,14 +1,17 @@
 export {
-	// url builder
-	BFurl,
+	// client
+	BFClient,
 
-	// blogger wrappers
-	BFclient,
-	BFformat,
-	BFfetch,
-	BFmake,
+	// core
+	BFUrl,
 
-	// blogger utils
-	BFthumb,
-	BFytimg,
+	// helpers
+	BFBuild,
+	BFFetch,
+	BFParse,
+
+	// utils
+	BFGetId,
+	BFThumb,
+	BFYTimg,
 } from '@lib'

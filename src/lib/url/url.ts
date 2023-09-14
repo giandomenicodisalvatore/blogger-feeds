@@ -1,12 +1,13 @@
 import {
-	type DateParamLike,
-	type OrderbyLike,
-	type LabelLike,
-	type DateLike,
-	type UrlLike,
+	type DateKeyStr,
+	type BFIds,
+	type OrderbyStr,
+	type BFLabel,
+	type DateStr,
+	// adapters
 	urlSetup,
-	getPost,
-	setPost,
+	BFGetId,
+	// params
 	getOrderBy,
 	setOrderBy,
 	getMaxResults,
@@ -19,31 +20,49 @@ import {
 	setSearched,
 	getLabels,
 	setLabels,
-	clearLabels,
 } from '@lib'
 
-export class BFurl extends URL {
-	constructor(conf: BFurl | UrlLike, base?: UrlLike) {
+export type UrlStr = string | URL
+
+// publicly exposed minimal api
+export class BFUrl extends URL {
+	#ids: BFIds = BFGetId(this.href)
+	#labels: Set<string> = new Set()
+
+	constructor(conf: BFUrl | UrlStr, base?: UrlStr) {
 		// normalization and compatibility
 		super(decodeURIComponent(conf + ''), base)
-		return urlSetup(this)
+		return urlSetup(this, this.#ids)
 	}
 
 	toString() {
-		return urlSetup(this, true)
+		return urlSetup(this, this.#ids, true)
 	}
 
-	postId(post: UrlLike): this
+	blogId(blog: UrlStr): this
+	blogId(): string | null
+	blogId(blog?: any) {
+		if (!arguments.length) return this['blog-id']
+		return blog && (this['blog-id'] = blog), this
+	}
+	get ['blog-id'](): string | null {
+		return this.#ids.blog
+	}
+	set ['blog-id'](blog: UrlStr) {
+		this.#ids.blog ??= BFGetId(blog).blog
+	}
+
+	postId(post: UrlStr): this
 	postId(): string | null
 	postId(post?: any) {
 		if (!arguments.length) return this.post
 		return post && (this.post = post), this
 	}
 	get ['post'](): string | null {
-		return getPost(this)
+		return this.#ids.post
 	}
-	set ['post'](post: UrlLike) {
-		setPost(this, post)
+	set ['post'](post: UrlStr) {
+		this.#ids.post ??= BFGetId(post).post
 	}
 
 	maxResults(num: number): this
@@ -72,47 +91,47 @@ export class BFurl extends URL {
 		setStartIndex(this, num)
 	}
 
-	orderBy(str: OrderbyLike): this
-	orderBy(): OrderbyLike | null
+	orderBy(str: OrderbyStr): this
+	orderBy(): OrderbyStr | null
 	orderBy(str?: any) {
 		if (!arguments.length) return this['orderby']
 		return (this['orderby'] = str), this
 	}
-	get ['orderby'](): OrderbyLike | null {
+	get ['orderby'](): OrderbyStr | null {
 		return getOrderBy(this)
 	}
-	set ['orderby'](str: OrderbyLike) {
+	set ['orderby'](str: OrderbyStr) {
 		setOrderBy(this, str)
 	}
 
-	dateParams(param: DateParamLike, date: DateLike): this
-	dateParams(param: DateParamLike): string
-	dateParams(param: DateParamLike, date?: any) {
+	dateParams(param: DateKeyStr, date: DateStr): this
+	dateParams(param: DateKeyStr): string
+	dateParams(param: DateKeyStr, date?: any) {
 		if (arguments.length === 1) return this[param]
 		return date && (this[param] = date), this
 	}
 	get ['published-max']() {
 		return getDates(this, 'published-max')
 	}
-	set ['published-max'](date: DateLike) {
+	set ['published-max'](date: DateStr) {
 		setDates(this, 'published-max', date)
 	}
 	get ['published-min']() {
 		return getDates(this, 'published-min')
 	}
-	set ['published-min'](date: DateLike) {
+	set ['published-min'](date: DateStr) {
 		setDates(this, 'published-min', date)
 	}
 	get ['updated-max']() {
 		return getDates(this, 'updated-max')
 	}
-	set ['updated-max'](date: DateLike) {
+	set ['updated-max'](date: DateStr) {
 		setDates(this, 'updated-max', date)
 	}
 	get ['updated-min']() {
 		return getDates(this, 'updated-min')
 	}
-	set ['updated-min'](date: DateLike) {
+	set ['updated-min'](date: DateStr) {
 		setDates(this, 'updated-min', date)
 	}
 
@@ -129,20 +148,20 @@ export class BFurl extends URL {
 		setSearched(this, str)
 	}
 
-	withLabels(labels: LabelLike[]): this
-	withLabels(): LabelLike[]
+	withLabels(labels: BFLabel[]): this
+	withLabels(): BFLabel[]
 	withLabels(labels?: any) {
 		if (!arguments.length) return this['labels']
 		return (this['labels'] = labels), this
 	}
-	get ['labels'](): LabelLike[] {
-		return getLabels(this)
+	get ['labels'](): BFLabel[] {
+		return getLabels(this.#labels)
 	}
-	set ['labels'](labels: LabelLike[]) {
-		setLabels(this, structuredClone(labels))
+	set ['labels'](labels: BFLabel[]) {
+		setLabels(this.#labels, structuredClone(labels))
 	}
 
 	clearLabels(): this {
-		return clearLabels(this), this
+		return this.#labels.clear(), this
 	}
 }

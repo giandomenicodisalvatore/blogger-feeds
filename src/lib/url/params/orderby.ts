@@ -1,10 +1,10 @@
-import { type BFurl } from '@lib'
+import { type BFUrl } from '@lib'
 
+export type OrderbyStr = 'published' | 'updated'
 export const OK_ORDERBY = new Set(['published', 'updated'])
-export type OrderbyLike = 'published' | 'updated'
 
-export const getOrderBy = (url: BFurl): OrderbyLike | null =>
-	url.searchParams.get('orderby') as OrderbyLike
+export const getOrderBy = (url: BFUrl): OrderbyStr | null =>
+	url.searchParams.get('orderby') as OrderbyStr
 
-export const setOrderBy = (url: BFurl, str: OrderbyLike) =>
+export const setOrderBy = (url: BFUrl, str: OrderbyStr) =>
 	OK_ORDERBY.has(str) && url.searchParams.set('orderby', str)

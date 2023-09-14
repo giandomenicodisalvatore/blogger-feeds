@@ -1,14 +1,21 @@
-import { type BFurl, REQ_PARAMS, OK_PARAMS, stringifyLabels } from '@lib'
+import {
+	type BFUrl,
+	DEF_ORDERBY,
+	DEF_MAXRES,
+	REQ_PARAMS,
+	OK_PARAMS,
+	stringifyLabels,
+} from '@lib'
 
-export const paginatedFlow = (url: BFurl) => {
+export const paginatedFlow = (url: BFUrl) => {
 	// default required params
 	REQ_PARAMS.forEach((v, k) => {
 		return url.searchParams.get(k) !== v && url.searchParams.set(k, v)
 	})
 
 	// default pagination params
-	url['orderby'] ??= 'published'
-	url['max-results'] ??= 150
+	url['max-results'] ??= DEF_MAXRES
+	url['orderby'] ??= DEF_ORDERBY
 
 	// merge search and labels
 	url['searched'] = stringifyLabels(url.labels) + ' ' + url['searched']

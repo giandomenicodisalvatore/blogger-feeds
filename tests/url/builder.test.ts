@@ -1,13 +1,6 @@
-import {
-	REQ_PARAMS,
-	REQ_PATH,
-	DATE_PARAMS,
-	BloggerFeedsUrl,
-	BFurl,
-	isoDateStr,
-} from '@lib'
+import { REQ_PARAMS, REQ_PATH, DATE_PARAMS, BFUrl, isoDateStr } from '@lib'
 
-describe('BloggerFeedsUrl', () => {
+describe('BFUrl', () => {
 	const example = new URL(
 			import.meta.env.VITE_EXAMPLE_BLOG ?? 'https://example.com',
 		),
@@ -20,38 +13,30 @@ describe('BloggerFeedsUrl', () => {
 
 	defaultPaginated.searchParams.sort()
 
-	describe('BFurl', () => {
-		it('alias of BloggerFeedsUrl', () => {
-			expect(new BFurl(example)).toEqual(new BloggerFeedsUrl(example))
-			expect(new BFurl(example)).toBeInstanceOf(BloggerFeedsUrl)
-			expect(BFurl).toBe(BloggerFeedsUrl)
-		})
-	})
-
 	describe('extends native URL api', () => {
 		it('requires "new" and valid url', () => {
-			expect(() => new BFurl(example)).not.toThrow()
+			expect(() => new BFUrl(example)).not.toThrow()
 			// @ts-expect-error
-			expect(() => BFurl()).toThrow()
+			expect(() => BFUrl()).toThrow()
 			// @ts-expect-error
-			expect(() => new BFurl()).toThrow()
+			expect(() => new BFUrl()).toThrow()
 		})
 
 		it('allows string coercion', () => {
-			expect(new BFurl(example) + '').toBe(defaultPaginated + '')
-			expect(new BFurl(baseFeeds).postId(postId) + '').toBe(examplePost)
+			expect(new BFUrl(example) + '').toBe(defaultPaginated + '')
+			expect(new BFUrl(baseFeeds).postId(postId) + '').toBe(examplePost)
 		})
 
 		it('enhances URL interface apis', () => {
 			Object.keys(URL.prototype).forEach(api =>
-				expect(new BFurl(new BFurl(example))).toHaveProperty(api),
+				expect(new BFUrl(new BFUrl(example))).toHaveProperty(api),
 			)
 		})
 	})
 
 	describe('method chaining', () => {
-		let urlApi = new BFurl(example),
-			chainApi = new BFurl(example),
+		let urlApi = new BFUrl(example),
+			chainApi = new BFUrl(example),
 			date = new Date(),
 			dateStr = isoDateStr(date),
 			expected: any
@@ -59,13 +44,13 @@ describe('BloggerFeedsUrl', () => {
 		it('only works for blogger params', () => {
 			expect(() => {
 				// @ts-expect-error
-				new BFurl(example).pathname().origin()
+				new BFUrl(example).pathname().origin()
 			}).toThrow()
 			expect(() => {
-				new BFurl(example).withSearch('searched').withLabels()
+				new BFUrl(example).withSearch('searched').withLabels()
 			}).not.toThrow()
 			expect(() => {
-				new BFurl(example).postId('searched').maxResults()
+				new BFUrl(example).postId('searched').maxResults()
 			}).not.toThrow()
 		})
 
@@ -89,8 +74,8 @@ describe('BloggerFeedsUrl', () => {
 
 		it('with value is a setter', () => {
 			// reset for next test
-			urlApi = new BFurl(example)
-			chainApi = new BFurl(example)
+			urlApi = new BFUrl(example)
+			chainApi = new BFUrl(example)
 
 			chainApi.maxResults(123)
 			expect(chainApi.searchParams.get('max-results')).toEqual('123')
@@ -114,16 +99,16 @@ describe('BloggerFeedsUrl', () => {
 	})
 
 	describe('single post flow', () => {
-		let urlApi: BFurl, chainApi: BFurl
+		let urlApi: BFUrl, chainApi: BFUrl
 
 		beforeEach(() => {
-			urlApi = new BFurl(example)
-			chainApi = new BFurl(example)
+			urlApi = new BFUrl(example)
+			chainApi = new BFUrl(example)
 		})
 
 		it('returns valid urls', () => {
-			urlApi = new BFurl(example)
-			chainApi = new BFurl(example)
+			urlApi = new BFUrl(example)
+			chainApi = new BFUrl(example)
 
 			expect(() => new URL(chainApi.postId(postId) + ''))
 				.not.to.throw()
@@ -135,8 +120,8 @@ describe('BloggerFeedsUrl', () => {
 		})
 
 		it('only keeps required params', () => {
-			const postReset = new BFurl(
-				new BFurl(examplePost).withSearch('my terms').withLabels(['xxx']),
+			const postReset = new BFUrl(
+				new BFUrl(examplePost).withSearch('my terms').withLabels(['xxx']),
 			)
 			expect(postReset.searched).toBe('')
 			expect(postReset.labels).toEqual([])
@@ -156,11 +141,11 @@ describe('BloggerFeedsUrl', () => {
 		const myTerms = 'my search terms',
 			myLabel = ['xxx']
 
-		let urlApi: BFurl, chainApi: BFurl
+		let urlApi: BFUrl, chainApi: BFUrl
 
 		beforeEach(() => {
-			chainApi = new BFurl(example)
-			urlApi = new BFurl(example)
+			chainApi = new BFUrl(example)
+			urlApi = new BFUrl(example)
 		})
 
 		it('returns valid urls', () => {
@@ -189,8 +174,8 @@ describe('BloggerFeedsUrl', () => {
 			})
 
 			it('defaults to 150', () => {
-				expect(new BFurl(example).maxResults(999).maxResults()).toBe(150)
-				expect(new BFurl(example)['max-results']).toBe(150)
+				expect(new BFUrl(example).maxResults(999).maxResults()).toBe(150)
+				expect(new BFUrl(example)['max-results']).toBe(150)
 			})
 		})
 
@@ -205,10 +190,10 @@ describe('BloggerFeedsUrl', () => {
 
 			it('defaults to published', () => {
 				// @ts-expect-error
-				expect(new BFurl(example).orderBy('invalid').orderBy()).toBe(
+				expect(new BFUrl(example).orderBy('invalid').orderBy()).toBe(
 					'published',
 				)
-				expect(new BFurl(example)['orderby']).toBe('published')
+				expect(new BFUrl(example)['orderby']).toBe('published')
 			})
 		})
 
@@ -222,8 +207,8 @@ describe('BloggerFeedsUrl', () => {
 			})
 
 			it('positive integer >= 1', () => {
-				expect(new BFurl(example).startIndex(2.5).startIndex()).toBe(null)
-				expect(new BFurl(example).startIndex(123).startIndex()).toBe(123)
+				expect(new BFUrl(example).startIndex(2.5).startIndex()).toBe(null)
+				expect(new BFUrl(example).startIndex(123).startIndex()).toBe(123)
 			})
 		})
 
@@ -328,7 +313,7 @@ describe('BloggerFeedsUrl', () => {
 
 			it('can be cleared', () => {
 				// why can't reuse urlApi and chainApi
-				const cleared = new BFurl(example)
+				const cleared = new BFUrl(example)
 
 				cleared.labels = [single]
 				cleared.withLabels(joined)

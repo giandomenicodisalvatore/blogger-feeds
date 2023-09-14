@@ -1,4 +1,3 @@
-export * from './clear'
 export * from './get'
 export * from './normalize'
 export * from './set'

@@ -1,56 +1,86 @@
 import {
-	type BFPaginatedData,
-	type BFPostData,
-	type UrlLike,
-	type BFpick,
-	type BFurlconf,
-	type BFurl,
-	BFformat,
-	BFmake,
+	type OrderbyStr,
+	type BFLabel,
+	type DateStr,
+	type UrlStr,
+	type BFData,
+	type BFPick,
+	BFBuild,
+	BFParse,
 } from '@lib'
 
-const FETCH_OPT = {
-	headers: { accept: 'application/json' },
-	keepalive: true,
+export type BFConf = (
+	| {
+			// single flow
+			blog: UrlStr
+			post: UrlStr
+	  }
+	| {
+			blog: UrlStr
+			// paginated flow
+			orderby?: OrderbyStr
+			'max-results'?: number
+			'start-index'?: number
+			'published-max'?: DateStr
+			'published-min'?: DateStr
+			'updated-max'?: DateStr
+			'updated-min'?: DateStr
+			searched?: string
+			labels?: BFLabel
+	  }
+) & {
+	// fetch options
+	fetchOpt?: RequestInit
+	// select props
+	pick?: BFPick
 }
 
-export type BFfetchconf = BFurlconf & {
-	signal?: AbortSignal
-	pick?: BFpick
-}
-
-export type BFdata = BFPostData | BFPaginatedData | BFerr
-
-export type BFerr = {
-	url: BFurl | null
+export type BFError = {
+	conf: BFConf
 	err: Error | any
+	req?: Request
 	res?: Response
 }
 
-export function BFfetch(conf: BFfetchconf): Promise<BFdata>
-export function BFfetch(conf: UrlLike, blog?: UrlLike): Promise<BFdata>
-export async function BFfetch(conf: any, blog?: any) {
-	let data, url, res
+const OPT = {
+	// optimized browser & server level
+	headers: {
+		// enforce connection pooling
+		accept: 'application/json',
+		connection: 'keep-alive',
+	},
+	// continue until abort
+	keepalive: true,
+}
+
+export function BFFetch(conf: BFConf): Promise<BFData | BFError>
+export function BFFetch(conf: UrlStr, blog?: UrlStr): Promise<BFData | BFError>
+export async function BFFetch(conf: any, blog?: any) {
+	let final, url, res, req
 
 	try {
-		url = BFmake(conf, blog)
+		url = BFBuild(conf, blog)
 		if (!url) throw new Error('URL_ERROR')
 
-		// copy for debugging
-		res = await fetch(url + '', { ...FETCH_OPT, signal: conf?.signal })
+		req = new Request(
+			url.toString(),
+			Object.assign({}, OPT, conf?.fetchOpt ?? {}),
+		)
+
+		res = await fetch(req) // save it for later
 		if (!res.ok) throw new Error('RESPONSE_ERROR')
 
-		// copy to consume
-		data = await res.clone().json()
-		data = BFformat(data, conf?.pick)
+		// this copy will be consumed as a stack
+		final = await res.clone().json()
+		final = BFParse(final, conf?.pick)
 
-		// cleanup
-		url = res = conf = blog = null
+		// all is well => cleanup
+		url = res = req = conf = blog = null
 
-		// throw
+		// output raw data
 	} catch (err) {
-		data = { url, err, res }
+		final = { conf, err, req, res }
 	}
 
-	return data as BFdata
+	return final as BFData
 }

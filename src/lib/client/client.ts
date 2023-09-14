@@ -1,30 +1,17 @@
-import {
-	type BFPaginatedData,
-	type BFfetchconf,
-	type UrlLike,
-	BFfetch,
-	BFmake,
-} from '@lib'
+import { type UrlStr, type BFConf, type BFData, BFFetch, BFBuild } from '@lib'
 
-export async function* BFclient(conf: BFfetchconf, blog: UrlLike) {
-	let pick, signal, next, data
+export async function* BFClient(conf: BFConf, blog: UrlStr) {
+	let next = BFBuild(conf, blog),
+		fetchOpt = conf?.fetchOpt,
+		pick = conf?.pick,
+		data
 
-	// prepare config
-	if (typeof conf === 'string' || conf instanceof URL) {
-		next = BFmake(conf, blog)
-	} else {
-		;({ pick, signal, ...conf } = (conf ?? {}) as BFfetchconf)
-		next = BFmake(conf)
+	while (next && !fetchOpt?.signal?.aborted) {
+		yield((data = await BFFetch({ blog: next, pick })))
+		next = BFBuild((data as BFData)?.meta?.next ?? '')
 	}
 
-	while (next && !signal?.aborted) {
-		yield (data = await BFfetch({ blog: next, signal, pick }))
-
-		// only continue if next paginated
-		next = (data as BFPaginatedData)?.meta?.next
-			? BFmake(next)?.maxResults(1)
-			: null
-	}
-
-	return null
+	// @ts-ignore mass cleanup
+	fetchOpt = conf = blog = pick = data = next = null
+	return
 }

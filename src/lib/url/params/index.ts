@@ -1,6 +1,5 @@
 export * from './dates'
 export * from './maxResults'
 export * from './orderby'
-export * from './post'
 export * from './searched'
 export * from './startIndex'

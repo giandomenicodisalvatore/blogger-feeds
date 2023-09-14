@@ -1,3 +1,5 @@
+import { type OrderbyStr } from '@lib'
+
 export const REQ_PATH = '/feeds/posts/default/'
 
 export const REQ_PARAMS = new URLSearchParams({
@@ -8,18 +10,18 @@ export const REQ_PARAMS = new URLSearchParams({
 }) // sorted once
 REQ_PARAMS.sort()
 
-export type DateParamLike =
-	| 'published-max'
-	| 'published-min'
-	| 'updated-max'
-	| 'updated-min'
-
-export const DATE_PARAMS: Set<DateParamLike> = new Set([
+export const DATE_PARAMS: Set<DateKeyStr> = new Set([
 	'published-max',
 	'published-min',
 	'updated-max',
 	'updated-min',
 ])
+
+export type DateKeyStr =
+	| 'published-max'
+	| 'published-min'
+	| 'updated-max'
+	| 'updated-min'
 
 export const OK_PARAMS = new Set([
 	// always
@@ -32,3 +34,7 @@ export const OK_PARAMS = new Set([
 	'start-index',
 	'q',
 ])
+
+export const DEF_ORDERBY = 'published'
+
+export const DEF_MAXRES = 10
