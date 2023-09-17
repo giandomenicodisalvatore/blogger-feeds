@@ -1,17 +1,18 @@
-import { type UrlStr, type BFConf, type BFData, BFFetch, BFBuild } from '@lib'
+import { type FetchConf, type ReadConf, BFfetch } from '@lib/client'
+import { BFedit } from '@lib/url'
 
-export async function* BFClient(conf: BFConf, blog: UrlStr) {
-	let next = BFBuild(conf, blog),
-		fetchOpt = conf?.fetchOpt,
-		pick = conf?.pick,
+export type ClientConf = FetchConf & ReadConf
+
+export const BFclient = async function* (conf: ClientConf) {
+	let next = BFedit(conf.url, conf.blog),
+		{ opt, pick } = conf,
 		data
 
-	while (next && !fetchOpt?.signal?.aborted) {
-		yield((data = await BFFetch({ blog: next, pick })))
-		next = BFBuild((data as BFData)?.meta?.next ?? '')
+	while (next && !opt?.signal?.aborted) {
+		yield (data = await BFfetch({ url: next, pick }))
+		next = BFedit((data as any)?.meta?.next)
 	}
 
 	// @ts-ignore mass cleanup
 	fetchOpt = conf = blog = pick = data = next = null
-	return
 }

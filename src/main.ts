@@ -1,17 +1,9 @@
 export {
-	// client
-	BFClient,
-
 	// core
-	BFUrl,
+	BFbuild, // creates url from conf
 
 	// helpers
-	BFBuild,
-	BFFetch,
-	BFParse,
-
-	// utils
-	BFGetId,
-	BFThumb,
-	BFYTimg,
-} from '@lib'
+	// BFfetch,
+	BFconf, // creates conf from url
+	BFdate, // blogger dates format
+} from '@lib/index'

@@ -5,54 +5,75 @@ import dts from 'vite-plugin-dts'
 import PKG from './package.json'
 import { resolve } from 'path'
 
-export default defineConfig({
-	server: {
-		// please make it standard!
-		port: 3000,
-	},
+// @ts-ignore: passed via cli
+const isDemo = process?.argv?.at(-1) === 'demo'
 
-	resolve: {
-		alias: {
-			'@lib': resolve(__dirname, './src/lib/index'),
-		},
-	},
+export default defineConfig(({ mode, command }) => {
+	if (isDemo)
+		return {
+			root: './demo',
 
-	plugins: [
-		dts({
-			entryRoot: './src',
-		}),
-	],
+			build: {
+				emptyOutDir: true,
+			},
 
-	build: {
-		rollupOptions: {
-			external: Object.keys(PKG.peerDependencies),
-		},
+			resolve: {
+				alias: {
+					'@lib': resolve(__dirname, './src/lib'),
+				},
+			},
 
-		lib: {
-			fileName: (fmt, name) => [name, fmt, 'js'].join('.'),
-			entry: resolve('./src/main.ts'),
-			name: 'BloggerFeeds',
-		},
+			server: {
+				open: './demo',
+				port: 3000,
+			},
+		}
 
-		copyPublicDir: false,
-	},
-
-	test: {
-		globals: true,
-		outputFile: './www/tests/index.html',
-
-		dir: './tests',
-
-		reporters: ['default', 'basic', 'json', 'html'],
-		cache: {
-			dir: '../node_modules/.vitest',
+	// default: library config
+	return {
+		resolve: {
+			alias: {
+				'@lib': resolve(__dirname, './src/lib'),
+			},
 		},
 
-		coverage: {
-			reporter: ['html', 'html-spa', 'json', 'text'],
-			reportsDirectory: './www/coverage',
-			enabled: true, // only prod
-			provider: 'v8',
+		plugins: [
+			dts({
+				entryRoot: './src',
+			}),
+		],
+
+		build: {
+			rollupOptions: {
+				external: Object.keys(PKG.peerDependencies),
+			},
+
+			lib: {
+				fileName: (fmt, name) => [name, fmt, 'js'].join('.'),
+				entry: resolve('./src/main.ts'),
+				name: 'BloggerFeeds',
+			},
+
+			copyPublicDir: false,
 		},
-	},
+
+		test: {
+			globals: true,
+			outputFile: './www/tests/index.html',
+
+			dir: './tests',
+
+			reporters: ['default', 'basic', 'json', 'html'],
+			cache: {
+				dir: '../node_modules/.vitest',
+			},
+
+			coverage: {
+				reporter: ['html', 'html-spa', 'json', 'text'],
+				reportsDirectory: './www/coverage',
+				enabled: true, // only prod
+				provider: 'v8',
+			},
+		},
+	}
 })

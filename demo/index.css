@@ -1,0 +1,99 @@
+:root {
+	--titleHSL: 150, 50%, 50%;
+	--def-radius: 0.5rem;
+	color-scheme: light dark auto;
+	background-color: Canvas;
+	color: CanvasText;
+	font-family: system-ui;
+}
+
+* + * {
+	margin-block: 0.5rem;
+}
+
+h1 a,
+li::marker {
+	color: hsla(var(--titleHSL), 0.75);
+	font-weight: bold;
+	text-decoration: none;
+}
+
+li {
+	padding-left: 0.25rem;
+}
+
+kbd {
+	--shadow: 0.125rem 0.125rem 0.25rem;
+	padding: 0.25rem 0.5rem;
+	border: 0.1rem solid currentColor;
+	border-radius: var(--def-radius);
+	background-color: hsla(var(--titleHSL), 0.25);
+	box-shadow: var(--shadow) hsla(150, 15%, 15%, 0.75);
+	text-transform: uppercase;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+	kbd {
+		box-shadow: var(--shadow) hsla(150, 20%, 20%, 1);
+	}
+}
+
+.example {
+	display: grid;
+	grid-template: repeat(auto, 1fr) / repeat(3, 1fr);
+	gap: 1rem;
+
+	margin: 1rem auto;
+	min-height: 90svh;
+	max-width: 90vw;
+	word-break: break-all;
+
+	& > div {
+		grid-column: 1 / 4;
+		align-self: center;
+	}
+
+	& > form {
+		grid-column: 2 / 4;
+	}
+}
+
+#showcase {
+	display: flex;
+	flex-direction: column;
+}
+
+@media (max-width: 900px) {
+	.example {
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+#switch-example {
+	display: grid;
+	grid-template: auto / repeat(2, 1fr);
+	grid-auto-columns: 1fr;
+	gap: 0.5rem;
+}
+
+label {
+	margin-block: 0.15rem;
+	padding: 0.25rem 0.75rem;
+	background-color: hsla(var(--titleHSL), 0.025);
+	border-radius: var(--def-radius);
+
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	gap: 0.5rem;
+
+	font-size: smaller;
+	accent-color: hsla(var(--titleHSL), 0.9);
+	transition-duration: 200ms !important;
+
+	&:hover,
+	&:has(input:checked) {
+		background-color: hsla(var(--titleHSL), 0.25);
+	}
+}
