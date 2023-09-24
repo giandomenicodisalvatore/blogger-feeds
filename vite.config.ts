@@ -8,29 +8,10 @@ import { resolve } from 'path'
 // @ts-ignore: passed via cli
 const isDemo = process?.argv?.at(-1) === 'demo'
 
+// @ts-ignore
 export default defineConfig(({ mode, command }) => {
-	if (isDemo)
-		return {
-			root: './demo',
-
-			build: {
-				emptyOutDir: true,
-			},
-
-			resolve: {
-				alias: {
-					'@lib': resolve(__dirname, './src/lib'),
-				},
-			},
-
-			server: {
-				open: './demo',
-				port: 3000,
-			},
-		}
-
 	// default: library config
-	return {
+	const defaultConfig = {
 		resolve: {
 			alias: {
 				'@lib': resolve(__dirname, './src/lib'),
@@ -49,7 +30,7 @@ export default defineConfig(({ mode, command }) => {
 			},
 
 			lib: {
-				fileName: (fmt, name) => [name, fmt, 'js'].join('.'),
+				fileName: (fmt: string, name: string) => [name, fmt, 'js'].join('.'),
 				entry: resolve('./src/main.ts'),
 				name: 'BloggerFeeds',
 			},
@@ -76,4 +57,17 @@ export default defineConfig(({ mode, command }) => {
 			},
 		},
 	}
+
+	if (isDemo)
+		return Object.assign(
+			{
+				server: {
+					open: './demo/index.html',
+					port: 3000,
+				},
+			},
+			defaultConfig,
+		)
+
+	return defaultConfig
 })

@@ -4,6 +4,6 @@ export {
 
 	// helpers
 	// BFfetch,
-	BFconf, // creates conf from url
-	BFdate, // blogger dates format
+	BFconf, // extracts conf from urls
+	BFdate, // dates formatter
 } from '@lib/index'

@@ -1,3 +1,4 @@
+import { BLOGGER, normURL } from '@lib/url'
 import {
 	type SingleConf,
 	type PagedConf,
@@ -8,13 +9,14 @@ import {
 	dates,
 	search,
 	cleanup,
+	// to avoid circular references
+	// must import @lib/url/mutators
 } from '@lib/url/mutators'
-import { BLOGGER } from '@lib/url'
 
 /**
  * Configuration object
  */
-export type BuildConf = BlogConf & SingleConf & PagedConf
+export type BuildConf = BlogConf & (SingleConf | PagedConf)
 
 /**
  * An in-place url mutator
@@ -22,6 +24,10 @@ export type BuildConf = BlogConf & SingleConf & PagedConf
  */
 export type BuildMutator = (url: URL, conf: BuildConf) => void | boolean
 
+/**
+ * Mutate urls in-place while validating conf
+ * * return true to immediately stop processing
+ */
 const Mutators = [blog, single, paged, dates, search, cleanup]
 
 /**
@@ -34,8 +40,7 @@ export const BFbuild = (conf: BuildConf) => {
 		// mutate in-place, return when true
 		for (const mutate of Mutators) if (mutate(url, conf)) break
 		// consistent via many normURL passes
-		return url
-		// uber-tolerant
+		return normURL(url)
 	} catch (e) {
 		return console.error(e, conf), null
 	}

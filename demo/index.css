@@ -1,5 +1,6 @@
 :root {
-	--titleHSL: 150, 50%, 50%;
+	/* blogspot orange */
+	--titleHSL: 24, 100%, 50%;
 	--def-radius: 0.5rem;
 	color-scheme: light dark auto;
 	background-color: Canvas;
@@ -28,13 +29,13 @@ kbd {
 	border: 0.1rem solid currentColor;
 	border-radius: var(--def-radius);
 	background-color: hsla(var(--titleHSL), 0.25);
-	box-shadow: var(--shadow) hsla(150, 15%, 15%, 0.75);
+	box-shadow: var(--shadow) hsla(24, 15%, 15%, 0.75);
 	text-transform: uppercase;
 }
 
 @media screen and (prefers-color-scheme: dark) {
 	kbd {
-		box-shadow: var(--shadow) hsla(150, 20%, 20%, 1);
+		box-shadow: var(--shadow) hsla(24, 20%, 20%, 1);
 	}
 }
 

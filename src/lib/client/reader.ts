@@ -34,13 +34,18 @@ const feedConsumer = function* ({
 	meta?: PagedMeta | SingleMeta
 	raw: any[]
 }): Generator {
-	while (raw?.length) {
+	// adapter is necessary to reuse logics
+	// this way function becomes flow-agnostic
+	if (!Array.isArray(raw)) raw = [raw]
+
+	while (raw.length) {
 		const final: any = {},
 			curr = raw.shift()
 
 		for (const [key, fn] of schema)
 			if (choice.has('*') || choice.has(key))
 				// if no meta, post ? post : outer feed
+				// reuse same post as meta fallback
 				final[key] = fn(curr, (meta ??= final)) || null
 
 		yield final
@@ -54,14 +59,14 @@ export const BFread = (raw: any, conf: ReadConf) => {
 		),
 		meta = feedConsumer({
 			// reuse logics for both schema and post
-			raw: raw?.feed || [raw?.entry],
+			raw: raw?.feed || raw?.entry,
 			schema: MetaSchema,
 			choice,
 		}).next().value,
 		data = [
 			...feedConsumer({
 				// same applies here
-				raw: raw?.feed?.entry || [raw?.entry],
+				raw: raw?.feed?.entry || raw?.entry,
 				schema: PostSchema,
 				choice,
 				meta,

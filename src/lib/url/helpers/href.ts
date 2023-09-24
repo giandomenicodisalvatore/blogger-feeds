@@ -26,5 +26,5 @@ export const useHF = (
 			url.href = str
 			break
 	}
-	return normURL(url)
+	return url
 }

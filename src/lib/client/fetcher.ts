@@ -1,11 +1,13 @@
 import { type ReadConf, type Feed, BFread } from '@lib/client'
-import { type BuildConf, BFedit } from '@lib/url'
+import { BFbuild, type BuildConf } from '@lib/url'
 
-export type FetchConf = {
-	blog?: Partial<BuildConf>
-	opt?: Partial<RequestInit>
-	url?: URL
-} & ReadConf
+export type FetchConf = Partial<
+	{
+		build: BuildConf
+		url: URL | string
+		opt: RequestInit
+	} & ReadConf
+>
 
 export interface FeedError {
 	err: Error | unknown
@@ -14,9 +16,7 @@ export interface FeedError {
 	res?: Response | null
 }
 
-export const FETCH_OPT = {
-	// continue until abort
-	keepalive: true,
+export const FETCH_OPT: RequestInit = {
 	// optimized browser & server level
 	headers: {
 		// enforce connection pooling
@@ -24,13 +24,18 @@ export const FETCH_OPT = {
 		'accept-encoding': 'br gzip',
 		connection: 'keep-alive',
 	},
+	// continue until abort
+	keepalive: true,
 }
 
 export const BFfetch = async (conf: FetchConf): Promise<Feed | FeedError> => {
 	let final, url, res, req
 
 	try {
-		url = BFedit(conf.url, conf.blog)
+		// if conf.url, use it as a base conf to update
+		url = BFbuild(
+			Object.assign(conf?.url ?? {}, conf?.build ?? {}) as BuildConf,
+		)
 		if (!url) throw new Error('invalid conf.blogger')
 
 		req = new Request(url, conf.opt ?? FETCH_OPT)

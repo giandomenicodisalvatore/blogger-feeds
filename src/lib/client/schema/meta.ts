@@ -1,3 +1,5 @@
+import { BFconf, BFdate, BFrebuild } from '@lib/url'
+
 export type SingleMeta = {
 	blog: string
 	blogId: string
@@ -28,68 +30,60 @@ export type PagedMeta = {
 
 export type SchemaParser = (raw: any, meta: PagedMeta | SingleMeta) => any
 
-export const MetaSchema: Map<keyof PagedMeta, SchemaParser> = new Map()
+export const extractLink = (raw: any, link: string): string =>
+	raw?.link?.find(({ rel }: any) => rel === link)?.href ?? ''
 
-/*/
-import { BFparse, safeUrl } from '@lib'
+/**
+ * Maps each result data prop to its own schemaParser
+ * * must be fail-safe because blogger may change anytime
+ * * extracts the most important flags from feeds:
+ * 	- blog, holds the only reference to the custom domain
+ * 	- blogId, flag required by blog flows
+ * 	- postId, flag required by single / paged flows
+ * 	- next, flag and url to next paged posts group
+ */
+export const MetaSchema = new Map<
+	keyof PagedMeta | keyof SingleMeta,
+	SchemaParser
+>()
+	/**
+	 * Always required
+	 */
+	// inferred from link 'alternate' because it references custom domains
+	.set('blog', (raw, meta) => BFconf(extractLink(raw, 'alternate')).blog + '')
+	// blogId and postId should be inferred from 'raw?.id?.$t' for accuracy
+	// but we use bfconf since it handles every use case and self link is
+	// guaranteed to be present on every resource
+	.set('blogId', (raw, meta) => BFconf(extractLink(raw, 'self')).blogId)
+	.set('postId', (raw, meta) => BFconf(extractLink(raw, 'self')).postId)
+	/**
+	 * All the rest is optional
+	 * * mostly are just remapped to post entries
+	 */
+	// dates params
+	.set('updated', raw => BFdate(raw?.updated?.$t))
+	.set('etag', raw => raw?.gd$etag)
+	// paged params
+	.set('total', raw => Number(raw?.openSearch$totalResults?.$t))
+	.set('start-index', raw => Number(raw?.openSearch$startIndex?.$t))
+	.set('max-results', raw => Number(raw?.openSearch$itemsPerPage?.$t))
+	// links
+	// reuses bfbuild and rebuild to enforce conventions
+	// since blogspot urls may omit certain parameters
+	// busting local cache when calling the same resource
+	.set(
+		'self',
+		(raw, meta: any) => BFrebuild(extractLink(raw, 'self'), meta) + '',
+	)
+	// blogger permalink to single posts
 
-export type PostMeta = {
-	blog: string
-	'blog-id': string
-	post: string
-	updated: string
-	etag: string
-	total: null
-	'start-index': null
-	'max-results': null
-	self: string
-	href: string
-	next: null
-}
-
-export type PagedMeta = {
-	blog: string
-	'blog-id': string
-	post: null
-	updated: string
-	etag: string
-	total: number | null
-	'start-index': number
-	'max-results': number
-	self: string
-	href: null
-	next: string | null
-}
-
-export type MetaParser = (raw: any, meta: Partial<PostMeta & PagedMeta>) => any
-
-export const extractLink = (raw: any, link: string) =>
-	safeUrl(raw?.link?.find(({ rel }: any) => rel === link)?.href)
-
-// uber-tolerant => blogspot may change anytime
-export const MetaSchema: Map<string, MetaParser> = new Map()
-	// always required
-	.set('blog', (raw: any, meta: any) => extractLink(raw, 'alternate')?.origin)
-	.set('blogId', (raw: any) => BFparse(raw?.id?.$t)?.blogId)
-	.set('postId', (raw: any) => BFparse(raw?.id?.$t)?.postId)
-	// all the rest
-	.set('updated', (raw: any) => isoDateStr(raw?.updated?.$t))
-	.set('etag', (raw: any) => raw?.gd$etag)
-	.set('total', (raw: any) => Number(raw?.openSearch$totalResults?.$t))
-	.set('start-index', (raw: any) => Number(raw?.openSearch$startIndex?.$t))
-	.set('max-results', (raw: any) => Number(raw?.openSearch$itemsPerPage?.$t))
-	// avoid BFUrl extra cycles by reusing blogspot links
-	.set('self', (raw: any, meta: any) => {
-		const url = extractLink(raw, 'self')
-		return bloggerAdapter(url, meta)?.href
-	})
-	.set('href', (raw: any, meta: any) => {
-		// only for posts
-		return meta.post && extractLink(raw, 'alternate')?.href
-	})
-	.set('next', (raw: any, meta: any) => {
-		const next = extractLink(raw, 'next')
-		// only for paginated
-		return bloggerAdapter(next, meta)?.href
-	})
-/*/
+	.set('href', (raw, meta) => meta.postId && extractLink(raw, 'alternate'))
+	// paged resuts have a next url, already configured
+	// and only if there are still entries yet to fetch
+	// this is a very valid flag for consecutive requests
+	// irrelevant for posts
+	.set(
+		'next',
+		(raw, meta) =>
+			!meta.postId && BFrebuild(extractLink(raw, 'next'), meta.blog) + '',
+	)

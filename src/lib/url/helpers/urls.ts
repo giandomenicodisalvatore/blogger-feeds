@@ -14,7 +14,7 @@ export const normURL = (url: URL) => (
 export const safeUrl = (url: URL | string, base?: URL | string) => {
 	try {
 		url = new URL(url, base)
-		return normURL(url)
+		return url
 	} catch {
 		return null
 	}
