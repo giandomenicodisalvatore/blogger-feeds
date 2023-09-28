@@ -14,15 +14,23 @@
       "vitest/globals"
     ],
     "rootDir": ".",
+    "baseUrl": ".",
     "paths": {
       "@lib/*": [
-        "./src/lib/*"
+        "lib/*",
+      ],
+      "@src/*": [
+        "src/*",
       ]
     }
   },
+  "include": [
+    "src",
+    "lib"
+  ],
   "exclude": [
-    "./demo/*.js",
-    "./dist",
-    "./www"
+    "src/*.js",
+    "dist",
+    "www"
   ],
 }

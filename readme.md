@@ -9,20 +9,43 @@ Fully typed javascript url builder and client for [Blogger](https://www.blogger.
 
 ## :man_technologist: Installation
 
-### npm
+### Npm
 
 ```bash
 npm i blogger-feeds
 ```
 
-### cdn
+### Cdn
 
 ```html
 <script type="module">
-const { BFbuild } = await import("https://cdn.jsdelivr.net/npm/blogger-feeds@latest")
+const { make } = await import("https://cdn.jsdelivr.net/npm/blogger-feeds@latest/core")
 // take a look at https://github.com/giandomenicodisalvatore/blogger-feeds/tree/main/demo
 </script>
 
+```
+
+### Exports
+
+Then you can import just what you need to further tree-shake the package size. For this reason, the package also provides some additional exports:
+
+```js
+// imports all the package
+import * as BF from "blogger-feeds 
+
+// just the url builder
+import { make } from "blogger-feeds/core"
+
+// just the client
+import { client } from "blogger-feeds/client"
+
+// some related helpers
+import { 
+  isoDate, // format date to blogger-compatible params  
+  merge, // merges two blogger urls or configs
+  thumb, // get the url to resized blogger thumbnail image
+  ytimg, // get the url to the default youtube hq thumbnail
+} from "blogger-feeds/helpers"
 ```
 
 ## :thinking: Why
@@ -31,91 +54,87 @@ The library serves a very specific scenario: **read-only data fetching on Blogge
 
 ## :warning: Requirements
 
-You may use the library **directly on a Blogger page** with no setup.
+The url builder `make()` at the core of the package works by itself.
 
-Since Blogger *correctly* enforces strict *CORS headers*, in order to use it in every **other environment**:
+You may use the `client()` **directly on a Blogger page** with no additional setup, but you may incur in CORS errors since Blogger *correctly* enforces strict *CORS headers*. In order to use `client()` in  **any environment**:
 
-1. Blogger must be setup to use a **custom domain sending proper [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)**
-2. **Dynamic views** template and auto **SSL rewrites** should be enabled (but may not always be required)
+1. Blogger must be setup with a **custom domain**
+2. the domain should be **sending proper [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)**
 
-To setup CORS I am using [Cloudflare free plan](https://www.cloudflare.com/plans/free) because it offers more then enough for many use cases. But it's just my personal taste, any other domain-level solution is equally viable.
+To achieve this setup I am using [Cloudflare's generous free plan](https://www.cloudflare.com/plans/free) because it offers more than enough for many use cases. But any other domain-level solution is equally viable.
 
 ## :wrench: How it works
 
-### Url builder: BFbuild()
+### Url builder: make()
 
 At its core there is a simple **url builder function** that:
 
-* **takes blogger params** and builds a native js URL objet
-* enforces and validates parameters against **blogger conventions**
+* **takes blogger params** and builds a validated native js URL
+* enforces and validates parameters against **Blogger conventions**
+* returns a safe URL to the requested resource or paginated list of feeds
 
-### Client function: BFclient()
+### Client generator: client()
 
-:warning: In active development
-
-The **client** is a vanilla js **async function generator** that:
+The client is a vanilla js **async function generator** that:
 
 * builds on top of the native `fetch()`
 * chunking data in single paginated bits
 * can be used in a `for await ... of` loop
+* returns a **simplified fully-typed feed object**
 
-I chose to stick as much as possible to:
+Please note that the returned **Feed object is not the fetched data**, but a simplified object holding simplified meta data for the request and a simplified version of the data entries.
 
-* **async function generator client**
-* **FIFO (first-in first-out) approach**  
-
-because some posts **may be very data-heavy** and, when paginated, they may quickly add up and become challenging on both the connection and the device.
+:warning: **No sanitization is applied to the content returned from Blogger**. Please make sure to **sanitize data.content html output** using an html sanitizer library (like [dom-purify](https://github.com/cure53/DOMPurify), [sanitize-html](https://github.com/apostrophecms/sanitize-html), [js-xss](https://jsxss.com/en/index.html)...)
 
 ## :muscle: Usage
 
 Feel free to explore the [demo folder](https://github.com/giandomenicodisalvatore/blogger-feeds/tree/main/demo) for more examples or take a look at the demo at
 
-### Url builder
-
 ```js
-import { BFbuild } from 'blogger-feeds'
+import { make, client } from 'blogger-feeds'
 
 //----------------------
-// url builder function
+//  url builder
 //----------------------
 
-const MyBlog = 'https://www.my-blogger.com',
-  PostId = '1234567', // at least 7 digits
-
-// fluent api
-const SinglePostUrl = BFbuild({
-  blog: MyBlog,
-  postId: PostId,
+const SinglePostUrl = make({
+  // you may pass "blogger" to get the blogger.com equivalent
+  blog: new URL("https://www.my-blogger.com"),
+  postId: "1234567", // at least 7 digits
 })
 
-console.log(SinglePostUrl + '')
-// https://www.my-blogger.com/feeds/posts/default/1234567/?alt=json&dynamicviews=1&rewriteforssl=true&v=2
-```
+console.log(SinglePostUrl?.href) // null if invalid config
 
-### Client generator
+const PagedPostsUrl = make({
+  blog: new URL("https://www.my-blogger.com"),
+  // never pass a valid postId
+  "max-results": 12
+})
 
-:warning: Still in active development
-
-```js
-import { BFclient } from 'blogger-feeds'
 
 //----------------------
-// client fn generator
+//  client generator
 //----------------------
 
-const Aborter = new AbortController(),
-  OnlyProps = ['id', 'href']
+const Aborter = new AbortController()
 
-const DefaultClient = BFClient({
-  blog: MyBlog, // must be valid
+const DefaultClient = client({
+  make: {
+    // same config as make()
+    blog: new URL("https://www.my-blogger.com")
+  }, 
 
-  fetchOpt: { // abortable!
+  // from: "valid blogger feeds url"
+  // if you want to merge other params
+
+  opt: { // abortable
     signal: Aborter.signal
   }
   
-  pick: OnlyProps // cherry pick props
+  // cherry pick props
+  keep: ["href", "title", "image"] 
 
-  "max-results": null // defaults to 10
+  // max-results defaults to 25
 })
 
 for await (const feed of DefaultClient) {
@@ -123,9 +142,14 @@ for await (const feed of DefaultClient) {
   // {meta: {...}, data: Array(10)} 
 }
 
-const PostClient = BFClient({
-  blog: MyBlog,
-  post: PostId,
+const PostClient = client({
+  // reuse this url
+  url: SinglePostUrl
+
+  make: {
+    // with new params
+    postId: '9876543'
+  }
 })
 
 for await (const post of PostClient) {
@@ -134,12 +158,8 @@ for await (const post of PostClient) {
 }
 ```
 
-## :ballot_box_with_check: TODO
-
-[ ] Write jsdocs & documentation
-[ ] Re-write minimal tests
-
 ## Disclaimer
 
-This library is **very opinionated**, it was built for reusability between personal Blogger projects and it is not meant to replace GAPI client in any way. It's just a different approach for a read-only scenario heavily inspired by blogger's own dynamic templates.
-**It is neither affiliated or approved by [Google](https://www.blogger.com)**.
+This library is **very opinionated**, it was born by consolidating various snippets I used on many Blogger custom js widgets. It may not be thoroughly tested, but it's profitably employed in a number of **public-facing production blogs**.
+
+It isn't meant to replace GAPI client in any way, it's just a different approach to obtain posts data in a read-only scenario, heavily inspired by Blogger's own dynamic templates. **It is neither affiliated or approved by [Google](https://www.blogger.com)**.

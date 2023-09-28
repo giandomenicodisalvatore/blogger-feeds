@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>&#128240; npm blogger-feeds</title>
+
+		<script>
+			// Change these variables to try on your blog
+			// Expect to see some CORS errors if you try fetch()
+
+			// Blogger team's blog 💖
+			var BLOG = new URL(import.meta.env.VITE_BLOG)
+			var BLOG_ID = import.meta.env.VITE_BLOG_ID
+
+			// Last post 📰
+			// https://blogger.googleblog.com/2020/05/a-better-blogger-experience-on-web.html
+			var POST_ID = import.meta.env.VITE_POST_ID
+
+			// Try using make()
+		</script>
+		<script type="module" src="./index"></script>
+	</head>
+	<body>
+		<div class="example">
+			<div>
+				<h1>
+					<a href="https://www.npmjs.com/package/blogger-feeds" target="_blank">
+						&#128240; npm blogger-feeds
+					</a>
+				</h1>
+
+				<div id="showcase">
+					<!-- this link will point to the blogger feeds url -->
+					<a target="_blank" id="example-url">&#11088; ...</a>
+
+					<!-- this link will point to the example source -->
+					<a target="_blank" id="example-file">&#128270; ...</a>
+				</div>
+			</div>
+
+			<ol>
+				<li>
+					<b>clone</b> the repo from
+					<a
+						href="https://github.com/giandomenicodisalvatore/blogger-feeds"
+						target="_blank">
+						github
+					</a>
+				</li>
+				<li>run <b>npm i && npm demo:dev</b></li>
+				<li>edit <b>BLOG, BLOG_ID and POST_ID</b></li>
+				<li>open <b>dev console</b></li>
+				<li><kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>i</kbd></li>
+			</ol>
+
+			<!-- this form will be populated by examples -->
+			<form id="switch-example"></form>
+		</div>
+
+		<template id="examples-inputs">
+			<label>
+				<input type="radio" name="filename" />
+				<span></span>
+			</label>
+		</template>
+	</body>
+</html>

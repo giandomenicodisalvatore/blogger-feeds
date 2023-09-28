@@ -1,1 +1,3 @@
-# TODO: updated tests
+# TODO: refactored tests
+# they should only test for main functionalities
+# because lib is already used in demo / production

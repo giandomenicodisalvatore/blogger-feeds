@@ -4,10 +4,12 @@ www
 dist
 
 # development
+*.tsbuildinfo
 dev
 
 # TODO: vitepress
 docs
 
 # secrets
-.env*
+.env
+!.env.example
