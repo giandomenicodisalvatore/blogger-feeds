@@ -1,14 +1,7 @@
 # let it build!
 node_modules
-www
 dist
-
-# development
-*.tsbuildinfo
-dev
-
-# TODO: vitepress
-docs
+cache
 
 # secrets
 .env

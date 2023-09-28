@@ -9,11 +9,6 @@
     "incremental": true,
     "allowJs": true,
     "strict": true,
-    "types": [
-      "vitest/importMeta",
-      "vitest/globals"
-    ],
-    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@lib/*": [
@@ -22,15 +17,15 @@
       "@src/*": [
         "src/*",
       ]
-    }
+    },
   },
   "include": [
     "src",
     "lib"
   ],
   "exclude": [
-    "src/*.js",
+    "demo/*.js",
     "dist",
-    "www"
+    "docs"
   ],
 }
