@@ -6,17 +6,17 @@
 
 		<title>&#128240; npm blogger-feeds</title>
 
-		<script>
+		<script type="module">
 			// Change these variables to try on your blog
 			// Expect to see some CORS errors if you try fetch()
 
 			// Blogger team's blog 💖
-			var BLOG = new URL(import.meta.env.VITE_BLOG)
-			var BLOG_ID = import.meta.env.VITE_BLOG_ID
+			globalThis.BLOG = new URL(import.meta.env.VITE_BLOG)
+			globalThis.BLOG_ID = import.meta.env.VITE_BLOG_ID
 
 			// Last post 📰
 			// https://blogger.googleblog.com/2020/05/a-better-blogger-experience-on-web.html
-			var POST_ID = import.meta.env.VITE_POST_ID
+			globalThis.POST_ID = import.meta.env.VITE_POST_ID
 
 			// Try using make()
 		</script>

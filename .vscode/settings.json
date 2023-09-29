@@ -5,6 +5,7 @@
     "helpers",
     "types",
     "url",
-    "client"
+    "client",
+    "docs"
   ]
 }

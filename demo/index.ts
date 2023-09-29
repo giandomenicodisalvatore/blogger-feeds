@@ -1,6 +1,5 @@
 // @ts-nocheck
-/// <reference types="../src/env.d.ts" />
-export * from '../src/main'
+export * from '@lib/api'
 import './index.css'
 
 const RunsInBrowser = [typeof document, typeof window].every(

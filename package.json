@@ -1,6 +1,6 @@
 {
   "name": "blogger-feeds",
-  "version": "2.0.0-rc2",
+  "version": "2.0.1",
   "description": "Utilities and client for Blogger feeds",
   "homepage": "https://github.com/giandomenicodisalvatore/blogger-feeds",
   "repository": {
@@ -20,7 +20,7 @@
     "./helpers": "./dist/helpers.js"
   },
   "scripts": {
-    "prepublishOnly": "lib:build",
+    "prepublishOnly": "pnpm lib:build",
     "lib:build": "vite build -- lib",
     "demo:dev": "vite dev -- demo",
     "demo:build": "vite build -- demo",
