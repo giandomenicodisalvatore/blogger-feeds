@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "alwaysStrict": true,
+    "allowJs": true,
+    "lib": [
+      "DOM.Iterable",
+      "DOM",
+    ]
+  }
+}

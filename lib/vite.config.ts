@@ -1,21 +1,20 @@
-/// <reference types="vitest" />
-
 import { defineConfig } from 'vite'
-import dts from 'vite-plugin-dts'
 import PKG from '../package.json'
+import dts from 'vite-plugin-dts'
 import { resolve } from 'path'
 
-export const LIB_BUILD = defineConfig({
+export default defineConfig({
 	resolve: {
 		alias: {
-			'@lib': resolve(__dirname, '../lib'),
+			'@lib': resolve(__dirname, 'src'),
+			'@root': resolve(__dirname, '..'),
 		},
 	},
 
 	plugins: [
 		dts({
 			insertTypesEntry: true,
-			exclude: ['node_modules/**', 'demo/**'],
+			exclude: ['node_modules/**', 'dist/**', 'vite.*'],
 		}),
 	],
 
@@ -24,10 +23,10 @@ export const LIB_BUILD = defineConfig({
 			external: Object.keys(PKG.peerDependencies),
 
 			input: {
-				index: resolve('lib/api/index'),
-				core: resolve('lib/api/core'),
-				client: resolve('lib/api/client'),
-				helpers: resolve('lib/api/helpers'),
+				index: resolve(__dirname, 'src/index'),
+				core: resolve(__dirname, 'src/exports/core'),
+				client: resolve(__dirname, 'src/exports/client'),
+				helpers: resolve(__dirname, 'src/exports/helpers'),
 			},
 
 			output: {
@@ -36,12 +35,14 @@ export const LIB_BUILD = defineConfig({
 		},
 
 		lib: {
-			entry: 'lib/api/index.ts',
+			entry: resolve(__dirname, 'src/index'),
 			formats: ['es'],
 		},
-
-		copyPublicDir: false,
 	},
+
+	/*/
+	/// <reference types="vitest" />
+	/*/
 
 	/* test: {
 		globals: true,
