@@ -2,7 +2,7 @@ import { withPwa } from '@vite-pwa/vitepress'
 import { defineConfig } from 'vitepress'
 import PKG from '../../package.json'
 import UnoCss from 'unocss/vite'
-import path from 'path'
+import { resolve } from 'path'
 
 export default withPwa(
 	defineConfig({
@@ -25,6 +25,8 @@ export default withPwa(
 			footer: {
 				message:
 					'This library is neither affiliated or approved by <a href="https://www.blogger.com" target="_blank" rel="noopener,nofollow">Google Blogger</a>',
+				copyright:
+					'We &#10084; <a href="https://www.blogger.com" target="_blank" rel="noopener,nofollow">Blogger</a>',
 			},
 
 			/* sidebar: [
@@ -87,7 +89,7 @@ export default withPwa(
 
 			plugins: [
 				UnoCss({
-					configFile: path(__dirname, './uno.config.js'),
+					configFile: resolve(__dirname, './uno.config.js'),
 				}),
 			],
 		},

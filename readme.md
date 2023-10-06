@@ -6,7 +6,7 @@ Fully typed url builder, client and utilities for [Blogger](https://www.blogger.
 
 <img width="300" src="./docs/public/blogger-feeds-logo.svg" />
 
-*Credits to [Blogger](https://www.blogger.com) :heart:*
+*We ❤ [Blogger](https://www.blogger.com)*
 
 ## :man_technologist: Installation
 

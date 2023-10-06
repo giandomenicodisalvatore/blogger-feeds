@@ -24,4 +24,10 @@ export default defineConfig({
 		transformerDirectives(),
 		transformerVariantGroup(),
 	],
+
+	content: {
+		pipeline: {
+			exclude: [/\.(css|postcss|sass|scss|less|stylus|styl)($|\?)/, /VP*\.vue/],
+		},
+	},
 })

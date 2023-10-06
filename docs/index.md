@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "blogger-feeds"
+  name: blogger-feeds
   image: ./blogger-feeds-logo.svg
   tagline: Read-only utilities and client for Blogger feeds
   actions:
@@ -14,20 +14,28 @@ hero:
       link: /examples
 
 features:
-  - title: Platform conventions
-    details: Validates against blogger conventions, reusing even the same naming
+  - title: Blogger conventions
+    icon: 🤝
+    details: Validates parameters against blogger conventions adhering to the same naming
   - title: Url consistency
+    icon: 🔗
     details: Url params are as explicit and consistent as possible, for better cache matching
   - title: Lazy client
-    details: An async generator function to avoid over-fetching, sensible platform pagination built-in
+    icon: 📡
+    details: An async generator that prevents over-fetching with blogger's own pagination built-in
   - title: Simplified feeds
-    details: You may cherry-pick the props to keep in the fetched feeds, ignore the rest
-  - title: Extra utilities
-    details: Allowing you to work with blogger and youtube thumbnails or iso dates
+    icon: 🍒
+    details: You may cherry-pick the props to keep in the fetched feeds object, ignoring the rest
+  - title: Extra helpers
+    icon: 🔧
+    details: Functions to simplify working with blogger and youtube thumbnail urls or date params
   - title: No dependencies
+    icon: 👌
     details: All exports are simple wrappers around native js URL interface and fetch api
   - title: Tree-shakeable
+    icon: 🌳
     details: You may just import what you need and tree-shake the rest with your preferred bundler
   - title: Fully typed
-    details: Rebuilt from the ground up with typescript, even client feeds and errors are typed
+    icon: 💪
+    details: Rebuilt from the ground up in typescript, even client feeds and errors are typed
 ---
