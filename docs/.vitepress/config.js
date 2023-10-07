@@ -11,15 +11,58 @@ export default withPwa(
 		description: PKG.description,
 
 		themeConfig: {
+			logo: './blogger-feeds-logo.svg',
+
 			nav: [
 				{
 					text: 'Home',
 					link: '/',
 				},
-				/* {
+				{
+					text: 'Guide',
+					link: '/intro',
+				},
+				{
 					text: 'Examples',
-					link: '/markdown-examples',
-				}, */
+					link: '/examples',
+				},
+			],
+
+			sidebar: [
+				{
+					text: 'Overview',
+					items: [
+						{
+							text: 'Introduction',
+							link: '/intro',
+						},
+						{
+							text: 'Get started',
+							link: '/get-started',
+						},
+					],
+				},
+				{
+					text: 'Exports',
+					items: [
+						{
+							text: 'Url builder',
+							link: './builder',
+						},
+						{
+							text: 'Client generator',
+							link: './client',
+						},
+						{
+							text: 'Helpers',
+							link: './helpers',
+						},
+					],
+				},
+				{
+					text: 'Examples',
+					link: './examples',
+				},
 			],
 
 			footer: {
@@ -64,6 +107,7 @@ export default withPwa(
 		],
 
 		pwa: {
+			// TODO: pwa, enforce caching options
 			registerType: 'autoUpdate',
 			workbox: {
 				runtimeCaching: [
@@ -79,10 +123,14 @@ export default withPwa(
 					}, */
 				],
 			},
-			// TODO
 		},
 
 		vite: {
+			resolve: {
+				alias: {
+					'@lib': resolve(__dirname, '../../lib/src'),
+				},
+			},
 			server: {
 				port: 7777,
 			},
