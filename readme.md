@@ -8,7 +8,7 @@ Fully typed url builder, client and utilities for [Blogger](https://www.blogger.
 
 *We ❤ [Blogger](https://www.blogger.com)*
 
-## :man_technologist: Installation
+## 👨‍💻 Installation
 
 ### Via npm
 
@@ -25,7 +25,7 @@ const { make } = await import("https://cdn.jsdelivr.net/npm/blogger-feeds@latest
 
 ```
 
-## :package: Available exports
+## 📦 Available exports
 
 You can import just what you need to further tree-shake the package size
 
@@ -49,11 +49,11 @@ import {
 } from "blogger-feeds/helpers";
 ```
 
-## :thinking: Why
+## 🤔 Why
 
 This library serves a very specific use-case: **read-only posts fetching on Blogger blogs**, when the excellent [Gapi](https://github.com/google/google-api-javascript-client) + [Blogger v3 api](https://developers.google.com/blogger/docs/3.0/reference) may be *"overkill"*. In example when building a lightweight *preact / alpinejs widget*.
 
-## :wrench: How it works
+## 🔧 How it works
 
 ### Url builder: `make()`
 
@@ -77,7 +77,7 @@ An **async function generator** that:
 * returns a **fully-typed feed object** (caveat)
 * or a fully transparent error object
 
-## :heavy_check_mark: Requirements
+## ✔ Requirements
 
 The url builder `make()` at the core of the package works by itself, enforcing parameter-level **validation** and expliciting blogger defaults for **url consistency** (helping caches work).
 
@@ -88,7 +88,7 @@ You may use the `client()` **directly on a Blogger page** with no additional set
 
 To achieve this setup I am using [Cloudflare's generous free plan](https://www.cloudflare.com/plans/free), but any other solution is equally viable as long as it allows to enforce **your own cors headers**.
 
-## :warning: Caveats
+## ⚠ Caveats
 
 1. Please note that the **Feed object is not the fetched data**, but a **simplified representation** exposing:
    * **relevant meta data** related to the request itself
@@ -98,9 +98,7 @@ To achieve this setup I am using [Cloudflare's generous free plan](https://www.c
 
 3. **No sanitization is applied to any content returned from Blogger feeds**. Please make sure to **sanitize data.content html output** using an html sanitizer library (like [dom-purify](https://github.com/cure53/DOMPurify), [sanitize-html](https://github.com/apostrophecms/sanitize-html), [js-xss](https://jsxss.com/en/index.html)...)
 
-## :muscle: Usage
-
-Feel free to explore the [demo folder](https://github.com/giandomenicodisalvatore/blogger-feeds/tree/main/demo) for more examples.
+## 💪 Usage
 
 ``` js
 //----------------------
@@ -154,11 +152,11 @@ const DefaultClient = client({
   },
 
   opt: { 
-    // custom fecth options
+    // custom fetch options
     signal: Aborter.signal,
   },
   
-  // cherry pick meta or post props
+  // cherry-pick meta or post props
   keep: ["href", "title", "image"],
 });
 
@@ -183,11 +181,6 @@ for await (const post of PostClient) {
   // always 1 post in data array
 }
 ```
-
-## TODO
-
-* minimal tests
-* documentation
 
 ## Disclaimer
 

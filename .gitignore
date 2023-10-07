@@ -2,7 +2,3 @@
 node_modules
 dist
 cache
-
-# secrets
-.env
-!.env.example
