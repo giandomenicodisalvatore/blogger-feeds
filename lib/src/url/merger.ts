@@ -42,21 +42,18 @@ export const toConf = (str: URL | string) => {
 /**
  * Merges two urls or configs together
  */
-export const merge = (
-	url: URL | string | DestrConf,
-	conf: URL | string | DestrConf,
-) => {
+export const merge = (...conf: (URL | string | DestrConf)[]) => {
 	try {
-		const merged = {}
+		const merged = {} as BuildConf
 
-		for (let par of [url, conf])
-			Object.assign(
-				merged,
-				par instanceof URL || typeof par === 'string' ? toConf(par) : par,
-			)
+		for (let par of conf) {
+			if (par instanceof URL || typeof par === 'string') par = toConf(par)
+			Object.assign(merged, par)
+		}
 
-		return make(merged as BuildConf)
+		return make(merged)
 	} catch (e) {
-		return console.error(e, url, conf), null
+		console.error(e, ...conf)
+		return null
 	}
 }

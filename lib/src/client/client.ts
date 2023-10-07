@@ -20,7 +20,7 @@ export const client = async function* (conf: ClientConf) {
 
 		// in schemas: url reuse
 		// so that it can continue fetching
-		next = data.type === 'data' && data.meta.next
+		next = data?.type === 'data' && data?.meta?.next
 
 		// heavy lifting is already done
 		// at lower levels, now we can just iterate
@@ -30,5 +30,5 @@ export const client = async function* (conf: ClientConf) {
 	} while (next && !opt?.signal?.aborted)
 
 	// @ts-ignore: mass cleanup
-	conf = keep = data = next = null
+	conf = keep = data = next = opt = null
 }

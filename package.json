@@ -1,6 +1,6 @@
 {
   "name": "blogger-feeds",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Read-only utilities and client for Blogger feeds",
   "homepage": "https://github.com/giandomenicodisalvatore/blogger-feeds",
   "repository": {
@@ -33,12 +33,12 @@
     "Blogspot",
     "Blogger",
     "feeds",
-    "blogspot feeds",
-    "blogspot client",
-    "blogger feeds",
-    "blogger client",
-    "google blogger",
-    "google blogspot"
+    "Blogspot feeds",
+    "Blogspot client",
+    "Blogger feeds",
+    "Blogger client",
+    "google Blogger",
+    "google Blogspot"
   ],
   "author": "Giandomenico Di Salvatore",
   "license": "MIT",

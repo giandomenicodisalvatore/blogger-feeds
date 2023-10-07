@@ -1,3 +1,5 @@
+import { safeUrl, useSP } from '@lib/url'
+
 const BFimg =
 	/(http.*(?:blogger|blogspot|googleusercontent).*)(?:(\/.*\/)(.*\..*$)|(=s\d+.+?$))/
 // if blogspot, group with following path
@@ -17,12 +19,30 @@ export const thumb = (url: URL | string, size: number = 0) => {
 	return url
 }
 
-const YTimg = /(.+?(?:\.?ytimg|\.?youtube)\.com\/vi\/.*\/).+?(\..+?$)/
-// if youtube, group everything
-// save last segment as extension
-
+// refactored to detect youtube video id based on url format
+// will only output hqdefault because it is the most consistent format
+// otherwise there is no strict rule for image formatting in youtube
 // https://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
-export const ytimg = (url: URL | string) =>
-	new RegExp(YTimg).test((url = url + '')) // replace the filename
-		? url.replace(new RegExp(YTimg), '$1hqdefault$2')
-		: url
+export const ytimg = (str: string | URL) => {
+	let url = safeUrl(str),
+		vid
+
+	if (!url) return str
+
+	// it is already a well formatted image, just port to default
+	if (
+		url.href.includes('img.youtube.com/vi/') ||
+		url.href.includes('ytimg.com/vi/')
+	)
+		vid = url.pathname.substring(4).replace(/\/.+?$/, '')
+
+	// get the video id properly
+	if (url.href.includes('youtube.com/watch')) vid = url.searchParams.get('v')
+
+	// when passed a short-link
+	if (url.href.includes('youtu.be'))
+		vid = url.pathname.substring(1).replace(/\?.+?$/, '')
+
+	// if there is no url, just leave it
+	return vid ? `https://img.youtube.com/vi/${vid}/hqdefault.jpg` : str
+}
