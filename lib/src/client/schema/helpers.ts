@@ -1,4 +1,4 @@
-import { safeUrl, useSP } from '@lib/url'
+import { safeUrl } from '@lib/url'
 
 const BFimg =
 	/(http.*(?:blogger|blogspot|googleusercontent).*)(?:(\/.*\/)(.*\..*$)|(=s\d+.+?$))/
@@ -19,30 +19,89 @@ export const thumb = (url: URL | string, size: number = 0) => {
 	return url
 }
 
-// refactored to detect youtube video id based on url format
-// will only output hqdefault because it is the most consistent format
-// otherwise there is no strict rule for image formatting in youtube
+const ytPathIds = [
+	'youtube-nocookie', // privacy embeds
+	'img.youtube.com', // thumbnails
+	'ytimg.com', // short thumbs
+	'youtu.be', // share links
+]
+
+export const ytid = (url: string | URL) => {
+	if ((url = safeUrl(url) ?? '') instanceof URL) {
+		if (url.href.includes('youtube.com/watch'))
+			return url.searchParams.get('v') ?? ''
+
+		for (const test of ytPathIds)
+			if (url.href.includes(test))
+				return (
+					url.pathname
+						.split(/\/|\?/)
+						?.filter(e => e !== 'embed' && e !== 'vi')
+						?.at(1) ?? ''
+				)
+	}
+
+	return ''
+}
+
+type YTquality = '' | 'mq' | 'hq' | 'sd' | 'maxres'
+
+type YTthumb = 'default' | '1' | '2' | '3'
+
+const YouTubeFixture = {
+	origin: {
+		norm: 'https://img.youtube.com', // default
+		short: 'https://i.ytimg.com', // shortened
+	},
+	quality: new Set<YTquality>([
+		'', // default
+		'mq', // medium
+		'hq', // guaranteed
+		'sd', // standard
+		'maxres', // unscaled
+	]),
+	thumbs: new Set<YTthumb>([
+		'default', // video bg
+		'1', // start
+		'2', // middle
+		'3', // end
+	]),
+}
+
+// will prefer hqdefault because it is the most consistent format
 // https://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
-export const ytimg = (str: string | URL) => {
-	let url = safeUrl(str),
-		vid
+export const ytimg = (
+	url: string | URL = '',
+	{
+		thumb = 'default',
+		quality = 'hq',
+		short = true,
+		all = false,
+		id,
+	}: Partial<{
+		short: boolean
+		thumb: YTthumb
+		quality: YTquality
+		all: boolean
+		id: string
+	}> = {},
+) => {
+	// no valid yt ids, let the url go
+	if (!(id ??= ytid(url))) return url
 
-	if (!url) return str
+	// init with defaults and validate properly
+	const origin = YouTubeFixture.origin[short ? 'short' : 'norm']
+	if (!YouTubeFixture.quality.has(quality)) quality = 'hq'
+	if (!YouTubeFixture.thumbs.has(thumb)) thumb = 'default'
 
-	// it is already a well formatted image, just port to default
-	if (
-		url.href.includes('img.youtube.com/vi/') ||
-		url.href.includes('ytimg.com/vi/')
-	)
-		vid = url.pathname.substring(4).replace(/\/.+?$/, '')
+	// guaranteed default thumbnail size
+	if (!all) return origin + '/vi/' + id + '/' + quality + thumb + '.jpg'
 
-	// get the video id properly
-	if (url.href.includes('youtube.com/watch')) vid = url.searchParams.get('v')
-
-	// when passed a short-link
-	if (url.href.includes('youtu.be'))
-		vid = url.pathname.substring(1).replace(/\?.+?$/, '')
-
-	// if there is no url, just leave it
-	return vid ? `https://img.youtube.com/vi/${vid}/hqdefault.jpg` : str
+	// returns all possibilities
+	const final: any = {}
+	for (const thumb of YouTubeFixture.thumbs)
+		for (const quality of YouTubeFixture.quality)
+			(final[thumb] ??= {})[quality] = ytimg('', { quality, thumb, id })
+	//=> reuses id but overwrites thumb and quality
+	return final as Record<YTthumb, Record<YTquality, string>>
 }
