@@ -18,7 +18,17 @@ const size400 = thumb(exampleImg, 400)
 
 const exampleVid = 'https://www.youtube.com/watch?v=M7QMTRlzkt0'
 
-const ytHQImage = ytimg (exampleVid)
+const ytHQImage = ytimg(exampleVid)
+
+const ytMQImage = ytimg(exampleVid, {
+  quality: 'mq'
+})
+
+const ytAllImages = ytimg(exampleVid, {
+  all: true
+})
+
+console.table(ytAllImages)
 
 // date examples
 
@@ -182,9 +192,11 @@ const size400 = thumb(exampleImg, 400)
 
 ## `ytimg()`
 
-Given any valid YouTube image thumbnail or video url, remaps it to the associated high quality default thumbnail.
+Given any valid YouTube image thumbnail or video id, the function remaps it to the associated high quality default thumbnail or to the according passed options.
 
-Implemented according to [this stackoverflow answer](https://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api)
+Implemented according to [this stackoverflow answer](https://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api), since no other format is guaranteed to always exist, the function defaults to the video background image.
+
+If you pass `{all: true}` you will get back a dictionary of all possible urls, but please remember that no other formats than the default is guaranteed to exist.
 
 ``` js
 import { ytimg } from "blogger-feeds/helpers"
@@ -193,13 +205,27 @@ import { ytimg } from "blogger-feeds/helpers"
 const exampleVid = "https://www.youtube.com/watch?v=M7QMTRlzkt0"
 
 const ytHQImage = ytimg (exampleVid)
+
+const ytMQImage = ytimg(exampleVid, { quality: 'mq' })
+
+
+const ytAllImages = ytimg(exampleVid, {
+  all: true
+})
+
+// open dev console
+console.table(ytAllImages) 
 ```
 
-<a :href="exampleImg" text="exampleVid" />, Pensiero e tormento - Ivan Yonkov, Giandomenico di Salvatore ([youtube link](https://www.youtube.com/watch?v=M7QMTRlzkt0))
+<a :href="exampleVid" text="exampleVid" />, Pensiero e tormento - Ivan Yonkov, Giandomenico di Salvatore ([youtube link](https://www.youtube.com/watch?v=M7QMTRlzkt0))
 
 <div class="flex flex-col text-center gap-3">
   <div class="mx-auto">
     <img :src="ytHQImage" />
     <a :href="ytHQImage" text="ytHQImage" target="_blank" />
+  </div>
+  <div class="mx-auto">
+    <img :src="ytMQImage" />
+    <a :href="ytMQImage" text="ytMQImage" target="_blank" />
   </div>
 </div>

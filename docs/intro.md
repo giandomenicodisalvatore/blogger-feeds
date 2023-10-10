@@ -40,6 +40,4 @@ Async function generator
 
 ## Disclaimer
 
-It is **not meant to replace GAPI client** and never will be. Instead, it's a different approach to fetch published posts in a **read-only scenario**, heavily inspired by Blogger's own dynamic templates.
-
-**The library is neither affiliated or approved by [Google Blogger](https://www.blogger.com)**.
+This library is **not meant to replace GAPI client** and never will. It's just a different approach to fetch published posts in a **read-only scenario**, heavily inspired by Blogger's own dynamic templates. **It is neither affiliated or approved by [Google Blogger](https://www.blogger.com)**.

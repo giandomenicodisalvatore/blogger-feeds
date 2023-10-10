@@ -27,7 +27,7 @@ features:
     icon: 🍒
     details: You may cherry-pick the props to keep in the fetched feeds object, ignoring the rest
   - title: Extra helpers
-    icon: 🃏
+    icon: 🔧
     details: Functions to simplify working with blogger and youtube thumbnail urls or date params
   - title: No dependencies
     icon: 👌

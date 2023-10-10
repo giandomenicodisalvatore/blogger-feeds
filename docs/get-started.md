@@ -6,6 +6,8 @@ The url builder `make()` works by itself in any environment.
 
 While the `client()` generator may work with no additional configuration on a Blogger page, since it **correctly** enforces strict [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS), you are most likely to incur into **CORS issues** when using the library in any other environment (like node, lambda functions...).
 
+### Custom domain
+
 In order to **avoid said issues**:
 
 1. Blogger should be served through a **custom domain**
@@ -30,9 +32,9 @@ import { make } from "https://cdn.jsdelivr.net/npm/blogger-feeds@latest/core"
 </script>
 ```
 
-## Available exports
+## Exports
 
-You may import just what you need to further tree-shake the package size
+You may import just what you need to further tree-shake the bundle size
 
 ``` js
 // Imports all at once
@@ -55,8 +57,6 @@ import {
 ```
 
 ## Usage
-
-Feel free to explore the [demo folder](https://github.com/giandomenicodisalvatore/blogger-feeds/tree/main/demo) for more examples.
 
 ``` js
 //----------------------

@@ -22,10 +22,11 @@ export default withPwa(
 					text: 'Guide',
 					link: '/intro',
 				},
-				{
+				/* {
+					// TODO: playground?
 					text: 'Examples',
-					link: '/examples',
-				},
+					link: './examples',
+				}, */
 			],
 
 			sidebar: [
@@ -59,10 +60,11 @@ export default withPwa(
 						},
 					],
 				},
-				{
+				/* {
+					// TODO: playground?
 					text: 'Examples',
 					link: './examples',
-				},
+				}, */
 			],
 
 			footer: {
