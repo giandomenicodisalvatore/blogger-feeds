@@ -5,4 +5,4 @@ next: {text: Extra helpers, link: ./helpers}
 
 # Async generator `client()`
 
-todo
+// TODO
