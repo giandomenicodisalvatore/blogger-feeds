@@ -72,22 +72,6 @@ export default withPwa(
 					'We &#10084; <a href="https://www.blogger.com" target="_blank" rel="noopener,nofollow">Blogger</a>',
 			},
 
-			/* sidebar: [
-				{
-					text: 'Examples',
-					items: [
-						{
-							text: 'Markdown Examples',
-							link: '/markdown-examples',
-						},
-						{
-							text: 'Runtime API Examples',
-							link: '/api-examples',
-						},
-					],
-				},
-			], */
-
 			socialLinks: [
 				{
 					icon: 'github',
@@ -100,6 +84,14 @@ export default withPwa(
 			[
 				'link',
 				{
+					rel: 'icon',
+					type: 'image/svg+xml',
+					href: '/favicon.svg',
+				},
+			],
+			[
+				'link',
+				{
 					rel: 'stylesheet',
 					href: 'https://fonts.googleapis.com/css2?family=Fira+Sans&family=Fira+Code&display=swap',
 				},
@@ -109,6 +101,59 @@ export default withPwa(
 		pwa: {
 			// TODO: pwa, enforce caching options
 			registerType: 'autoUpdate',
+			manifest: {
+				theme_color: '#FF9124',
+				icons: [
+					{
+						src: '/favicon-72x72.png',
+						type: 'image/png',
+						sizes: '72x72',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-96x96.png',
+						type: 'image/png',
+						sizes: '96x96',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-128x128.png',
+						type: 'image/png',
+						sizes: '128x128',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-144x144.png',
+						type: 'image/png',
+						sizes: '144x144',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-152x152.png',
+						type: 'image/png',
+						sizes: '152x152',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-192x192.png',
+						type: 'image/png',
+						sizes: '192x192',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-384x384.png',
+						type: 'image/png',
+						sizes: '384x384',
+						purpose: 'any maskable',
+					},
+					{
+						src: '/favicon-512x512.png',
+						type: 'image/png',
+						sizes: '512x512',
+						purpose: 'any maskable',
+					},
+				],
+			},
 			workbox: {
 				runtimeCaching: [
 					/* {
