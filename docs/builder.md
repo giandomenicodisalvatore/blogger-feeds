@@ -68,7 +68,7 @@ const SearchForHelp = make({
 
 A very simple wrapper over [native URL interface](/intro.html#url-builder-make) to easily create valid blogger urls that strives to be as close as possible to Blogger's own naming convention and defaults, except for a [few handy differences](http://localhost:7777/builder.html#search-and-labeled-posts).
 
-Throughout the examples we will often refer to [Blogger's Team blog](https://blogger.googleblog.com) data.
+Throughout the examples we will refer to [Blogger Team's blog](https://blogger.googleblog.com).
 
 <<< @/.env{bash}
 
@@ -76,11 +76,11 @@ Throughout the examples we will often refer to [Blogger's Team blog](https://blo
 
 ### Blogger conventions
 
-Most of these defaults and conventions aren't documented or known and have been repeatedly found and confirmed through *best effort trial-and-error* while coding custom widgets. As such *they may differ* from the actual Blogger implementation.
+Most of these defaults and conventions have been inferred through *trial-and-error* while coding custom widgets. As such *they may differ* from the *actual* Blogger implementation.
 
 ### Custom domains vs blogger.com
 
-`blog` parameter is always required and must be a valid URL string. You may also pass `'blogger'` as a shortcut to *blogger.com*.
+[`blog` parameter](#blog) is always required and must be a valid URL. You may also pass [`'blogger'`](#blogid) to setup the url structure according to *blogger.com*
 
 Blogger url structure changes according to the blog domain, this is mainly reflected on single post feeds: to reach the same resource you may notice *slightly different paths* between a blogger.com blog and your own [custom domain](http://localhost:7777/get-started.html#custom-domain).
 
@@ -88,20 +88,20 @@ Blogger url structure changes according to the blog domain, this is mainly refle
 
 A valid `postId` causes the builder to always return a valid single post feed url and *ignore all other params* to avoid blogger errors, in other words:
 
-* a valid `postId` represents a single post resource
-* otherwise the url represents a paginated posts collection
+* a valid `postId` represents a [single post](#postid) resource
+* otherwise the url will point to a [paginated collection](#max-results)
 
-This behavior is also reflected and relied upon in the `client()` generator
+This behavior is also reflected and relied upon in the [`client()` generator](./client.md)
 
 ### Search `terms` and `labels`
 
-Blogger uses the same `?q=` search parameter to ~~query~~ *filter* posts feeds both by search terms and labels. To simplify the api `terms` and `labels` params are split: `make()` function will merge both for you according to Blogger conventions.
+Blogger uses the same `?q=` search parameter to ~~query~~ *filter* posts feeds both by [search terms](#terms-search) and [labels](#labels-filter). In order to simplify the api, `terms` and `labels` params are split: `make()` function will process and merge them according to Blogger conventions.
 
 ### Url consistency
 
-Blogger may have many possible urls to represent the same feed resource, eventually causing cache busting. For this reason `make()` is a deterministic function that always adds default and implicit params.
+There are many possible urls to represent the same feed resource, especially in returned raw feeds, eventually causing cache mismatches. For this reason `make()` is a *deterministic function* that automatically adds some *sensible default and implicit params*.
 
-We won't document them, but they are essential for url (and in *some* cases content) consistency:
+These latter have proved to be critical for both url and content *consistency*:
 
 * `rewriteforssl=true`
 * `dynamicviews=1`
@@ -110,7 +110,7 @@ We won't document them, but they are essential for url (and in *some* cases cont
 
 ## `blog` *
 
-Required, must be a *valid url* or `'blogger'` string
+*Always* required, must be a *valid url* or `'blogger'` string
 
 ``` js
 const DefaultPaginated = make({
@@ -171,7 +171,7 @@ Controls pagination size. Defaults to `25`, Blogger's own default. Its value is 
 ```js
 const PaginatedBy47 = make({
   blog: 'https://blogger.googleblog.com',
-  // because it's a prime number 🙂
+  // because it's a prime number 😇
   'max-results': 47,
 })
 ```
@@ -185,7 +185,7 @@ Controls pagination offset. Defaults to `1`, Blogger's own default.
 ```js
 const StartFrom47 = make({
   blog: 'https://blogger.googleblog.com',
-  // it's still a prime number 😇
+  // it's still a prime number 🙂
   'start-index': 47,
 })
 ```
@@ -194,7 +194,7 @@ const StartFrom47 = make({
 
 ## `orderby`
 
-Controls collections order. Defaults to `published`, Blogger's own default. It only allows sorting posts by `published` or `updated` descending order.
+Controls collections order. Defaults to `published`, Blogger's own default. It only allows sorting posts by `published` or `updated` in descending order.
 
 ```js
 const LastUpdated = make({
@@ -230,10 +230,10 @@ const BackTo2020 = make({
 
 ## `labels` filter
 
-[Merged with search terms](#search-terms-and-labels), it allows *filtering posts collection by labels*. It always expects an array of labels where:
+[Merged with search terms](#search-terms-and-labels), it allows *filtering posts collection by labels* passing an array where:
 
-* `string` elements are treated as single labels (OR)
-* `string[]` elements are considered joined together (AND)
+* `string` elements are treated as single labels (OR operation)
+* `string[]` elements are joined together (AND operation)
 
 ```js
 const LabeledYouTube = make({
@@ -244,7 +244,7 @@ const LabeledYouTube = make({
 
 const LabeledYoutubeSubset = make({
   blog: 'https://blogger.googleblog.com',
-  // posts with both youtube AND help label
+  // posts with both youtube AND subset labels
   // no posts exist with subset label
   labels: [['youtube','subset']],
 })
@@ -253,7 +253,7 @@ const LabeledYoutubeSubset = make({
 * <a text="LabeledYouTube" :href="LabeledYouTube" target="_blank" rel="nofollow,noopener" />
 * <a text="LabeledYoutubeSubset" :href="LabeledYoutubeSubset" target="_blank" rel="nofollow,noopener" />
 
-## `terms` (search)
+## search `terms`
 
 [Merged with labels](#search-terms-and-labels), it allows *filtering posts collection by search terms*. It expects a non-empty string, otherwise it gets ignored.
 
