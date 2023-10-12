@@ -10,9 +10,7 @@ export default defineConfig({
 	presets: [
 		presetUno(),
 		presetIcons({
-			collections: {
-				logos: () => import('@iconify/json/logos.json').then(i => i.default),
-			},
+			autoInstall: true,
 			scale: 1.2,
 			warn: true,
 			unit: 'em',
