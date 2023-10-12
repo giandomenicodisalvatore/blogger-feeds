@@ -120,7 +120,7 @@ const SinglePost = merge(PaginatedMax, {
 })
 ```
 
-Check out the data (if you try to fetch you may incur into [CORS issues](http://localhost:7777/get-started.html#requirements)):
+Check out the data (if you try to fetch you may incur into [CORS issues](./get-started.md#requirements)):
 
 <ul>
   <li>

@@ -2,18 +2,9 @@
 
 ## Requirements
 
-The url builder `make()` works by itself in any environment.
+While the [url builder](./builder.md) `make()` works by itself in any environment, the `client()` generator may most likely incur into [CORS issues](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
 
-While the `client()` generator may work with no additional configuration on a Blogger page, since it **correctly** enforces strict [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS), you are most likely to incur into **CORS issues** when using the library in any other environment (like node, lambda functions...).
-
-### Custom domain
-
-In order to **avoid said issues**:
-
-1. Blogger should be served through a **custom domain**
-2. that domain should **send proper [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)**
-
-To achieve this setup I am currently using [Cloudflare free plan](https://www.cloudflare.com/plans/free), but any other solution is equally viable, as long as it allows to setup **your own headers**.
+Please take a look at the client's [requirements](./client.md#requirements) to setup Blogger to [avoid those issues](./client.md#custom-domain) and remember to [*always sanitize html*](./client.md#sanitization),
 
 ## Installation
 
@@ -34,7 +25,7 @@ import { make } from "https://cdn.jsdelivr.net/npm/blogger-feeds@latest/core"
 
 ## Exports
 
-You may import just what you need to further tree-shake the bundle size
+You may import just what you need to further tree-shake the bundle size. The following namespaces allow tree-shaking even on a cdn import.
 
 ``` js
 // Imports all at once
@@ -88,10 +79,10 @@ const PagedPostsUrl = make({
   // never pass a valid postId 
   // when you need a paginated list
   
-  // blogger's defaults will be added for consistency
-  // "max-results": defaults to 25
-  // "start-index": defaults to 1
-  // "orderby": defaults to "published"
+  // blogger's defaults will be added
+  // "max-results": 25,
+  // "start-index": 1,
+  // "orderby": "published",
 });
 
 console.log(PagedPostsUrl?.href);

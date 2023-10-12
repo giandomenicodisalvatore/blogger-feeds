@@ -10,23 +10,20 @@ export default withPwa(
 
 		description: PKG.description,
 
+		base: '/blogger-feeds/',
+
 		themeConfig: {
 			logo: './blogger-feeds-logo.svg',
 
 			nav: [
 				{
-					text: 'Home',
-					link: '/',
-				},
-				{
 					text: 'Guide',
 					link: '/intro',
 				},
-				/* {
-					// TODO: playground?
+				{
 					text: 'Examples',
 					link: './examples',
-				}, */
+				},
 			],
 
 			sidebar: [
@@ -60,11 +57,10 @@ export default withPwa(
 						},
 					],
 				},
-				/* {
-					// TODO: playground?
+				{
 					text: 'Examples',
 					link: './examples',
-				}, */
+				},
 			],
 
 			footer: {
@@ -156,20 +152,6 @@ export default withPwa(
 					},
 				],
 			},
-			workbox: {
-				runtimeCaching: [
-					/* {
-						urlPattern: ({ request }) => request.destination === 'image',
-						handler: 'StaleWhileRevalidate',
-						options: {
-							cacheName: 'images-cache',
-							expiration: {
-								maxEntries: 10,
-							},
-						},
-					}, */
-				],
-			},
 		},
 
 		vite: {
@@ -179,7 +161,7 @@ export default withPwa(
 				},
 			},
 			server: {
-				port: 7777,
+				port: 3000,
 			},
 
 			plugins: [

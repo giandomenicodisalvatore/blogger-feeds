@@ -66,7 +66,7 @@ const SearchForHelp = make({
 
 # Url Builder `make()`
 
-A very simple wrapper over [native URL interface](/intro.html#url-builder-make) to easily create valid blogger urls that strives to be as close as possible to Blogger's own naming convention and defaults, except for a [few handy differences](http://localhost:7777/builder.html#search-and-labeled-posts).
+A very simple wrapper over [native URL interface](./intro.md#url-builder-make) to easily create valid blogger urls that strives to be as close as possible to Blogger's own naming convention and defaults, except for a [few handy differences](#search-and-labeled-posts).
 
 Throughout the examples we will refer to [Blogger Team's blog](https://blogger.googleblog.com).
 
@@ -82,7 +82,7 @@ Most of these defaults and conventions have been inferred through *trial-and-err
 
 [`blog` parameter](#blog) is always required and must be a valid URL. You may also pass [`'blogger'`](#blogid) to setup the url structure according to *blogger.com*
 
-Blogger url structure changes according to the blog domain, this is mainly reflected on single post feeds: to reach the same resource you may notice *slightly different paths* between a blogger.com blog and your own [custom domain](http://localhost:7777/get-started.html#custom-domain).
+Blogger url structure changes according to the blog domain, this is mainly reflected on single post feeds: to reach the same resource you may notice *slightly different paths* between a blogger.com blog and your own [custom domain](./get-started.md#custom-domain).
 
 ### Single post vs paginated collections
 

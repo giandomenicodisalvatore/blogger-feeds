@@ -92,11 +92,11 @@ To achieve this setup I am using [Cloudflare's generous free plan](https://www.c
 
 1. Please note that the **Feed object is not the fetched data**, but a **simplified representation** exposing:
    * **relevant meta data** related to the request itself
-   * a flattened **choice of relevant data entries**
+   * a flattened **susbet of relevant resource data**
 
-2. Should you need to access feeds data you may prefer to avoid the client and directly fetch the url.
+2. Should you need to access raw feeds data, you may prefer to avoid the client and directly fetch the url.
 
-3. **No sanitization is applied to any content returned from Blogger feeds**. Please make sure to **sanitize data.content html output** using an html sanitizer library (like [dom-purify](https://github.com/cure53/DOMPurify), [sanitize-html](https://github.com/apostrophecms/sanitize-html), [js-xss](https://jsxss.com/en/index.html)...)
+3. **No sanitization is applied to any content returned from Blogger feeds**. Please make sure to **sanitize post.body html output** using an html sanitizer library (like [dom-purify](https://github.com/cure53/DOMPurify), [sanitize-html](https://github.com/apostrophecms/sanitize-html), [js-xss](https://jsxss.com/en/index.html)...)
 
 ## 💪 Usage
 

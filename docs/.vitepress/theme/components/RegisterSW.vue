@@ -1,7 +1,7 @@
 <script setup>
-import { onBeforeMount } from 'vue';
+import { onMounted } from 'vue';
 
-onBeforeMount(async () => {
+onMounted(async () => {
   const { registerSW } = await import('virtual:pwa-register')
   registerSW({ immediate: true })
 })
