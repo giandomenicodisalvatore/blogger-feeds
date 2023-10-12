@@ -23,7 +23,7 @@ export default defineConfig({
 			external: Object.keys(PKG.peerDependencies),
 
 			input: {
-				index: resolve(__dirname, 'src/index'),
+				index: resolve(__dirname, 'src/exports/main'),
 				core: resolve(__dirname, 'src/exports/core'),
 				client: resolve(__dirname, 'src/exports/client'),
 				helpers: resolve(__dirname, 'src/exports/helpers'),
