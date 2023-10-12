@@ -28,7 +28,7 @@ export type ReadConf = {
 
 // the most important flags
 // aways required for the rest of the params
-const REQ_PROPS: FeedKey[] = ['blog', 'blogId', 'postId']
+const REQ_PROPS: FeedKey[] = ['blog', 'blogId', 'postId', 'next']
 
 const feedConsumer = function* ({
 	raw,

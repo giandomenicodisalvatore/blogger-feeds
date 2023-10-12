@@ -21,12 +21,12 @@ export interface FeedError {
 // server connection pooling: header keep-alive
 // connection persistence in broser: keepalive-true
 export const FETCH_OPT: RequestInit = {
+	keepalive: true,
 	headers: {
-		accept: 'application/json',
 		'accept-encoding': 'br gzip',
+		accept: 'application/json',
 		connection: 'keep-alive',
 	},
-	keepalive: true,
 }
 
 export const fetcher = async (
